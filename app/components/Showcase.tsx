@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { X, ExternalLink, Github, Network, Cpu, Settings2, Play, Code2 } from 'lucide-react';
 import { CASE_STUDIES } from '@/lib/data';
 import { CaseStudy } from '@/lib/types';
+import { useReveal } from '@/lib/useReveal';
 import {
   ReactFlow,
   Background,
@@ -30,10 +31,10 @@ const OrchestratorNode = ({ data }: { data: any }) => (
       <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
       STATUS: ACTIVE
     </div>
-    <Handle 
-      type="source" 
-      position={data.isMobile ? Position.Bottom : Position.Right} 
-      className="w-3 h-3 bg-cyan-500 border-2 border-zinc-950" 
+    <Handle
+      type="source"
+      position={data.isMobile ? Position.Bottom : Position.Right}
+      className="w-3 h-3 bg-cyan-500 border-2 border-zinc-950"
     />
   </div>
 );
@@ -43,13 +44,13 @@ const ProjectNode = ({ data }: { data: any }) => {
   return (
     <div className="bg-zinc-900/90 backdrop-blur-xl border border-zinc-800 rounded-2xl p-4 sm:p-5 w-[280px] sm:w-80 shadow-xl hover:border-cyan-500/40 hover:shadow-[0_0_20px_rgba(6,182,212,0.1)] transition-all duration-300 group cursor-pointer relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500/0 via-cyan-500/0 to-cyan-500/0 group-hover:from-cyan-500/50 group-hover:via-blue-500/50 group-hover:to-purple-500/50 transition-all duration-500" />
-      
-      <Handle 
-        type="target" 
-        position={data.isMobile ? Position.Top : Position.Left} 
-        className="w-3 h-3 bg-zinc-700 border-2 border-zinc-950 group-hover:bg-cyan-500 transition-colors" 
+
+      <Handle
+        type="target"
+        position={data.isMobile ? Position.Top : Position.Left}
+        className="w-3 h-3 bg-zinc-700 border-2 border-zinc-950 group-hover:bg-cyan-500 transition-colors"
       />
-      
+
       <div className="flex items-start gap-3 sm:gap-4 mb-3">
         <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-zinc-800/50 border border-zinc-700/50 flex items-center justify-center text-zinc-400 group-hover:text-cyan-400 group-hover:bg-cyan-500/10 group-hover:border-cyan-500/30 transition-all duration-300 shrink-0">
           <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -74,13 +75,14 @@ export const Showcase = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const ref = useReveal<HTMLElement>();
 
   useEffect(() => {
     const checkMobile = () => {
       const isMob = window.innerWidth < 768;
       setIsMobile(isMob);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
@@ -97,8 +99,8 @@ export const Showcase = () => {
       ...CASE_STUDIES.map((study, idx) => ({
         id: study.id,
         type: 'project',
-        position: isMobile 
-          ? { x: idx % 2 === 0 ? -60 : 60, y: 200 + idx * 220 } 
+        position: isMobile
+          ? { x: idx % 2 === 0 ? -60 : 60, y: 200 + idx * 220 }
           : { x: 350 + (idx % 2 === 0 ? 0 : 250), y: idx * 180 },
         data: { ...study, isMobile },
       }))
@@ -121,26 +123,17 @@ export const Showcase = () => {
   }, [isMobile, setNodes, setEdges]);
 
   return (
-    <section id="showcase" className="py-24 px-4 sm:px-6 max-w-7xl mx-auto relative z-10">
-      <motion.div 
-        initial={{ opacity: 0, y: 30, filter: 'blur(8px)' }}
-        whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 0.8, easings: [0.22, 1, 0.36, 1] }}
-        className="mb-12"
-      >
+    <section id="showcase" ref={ref} className="py-24 px-4 sm:px-6 max-w-7xl mx-auto relative z-10">
+      <div className="reveal mb-12">
         <h2 className="text-3xl md:text-4xl font-bold text-zinc-100 mb-4 tracking-tight">Agentic Workflows</h2>
         <p className="text-zinc-400 text-lg max-w-2xl">
           Interactive architecture map. Click on any node to inspect the deployment details and configuration.
         </p>
-      </motion.div>
+      </div>
 
-      <motion.div 
-        initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
-        whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-        viewport={{ once: true, margin: "-50px" }}
-        transition={{ duration: 0.8, delay: 0.2, easings: [0.22, 1, 0.36, 1] }}
-        className="w-full h-[600px] sm:h-[650px] bg-zinc-950 border border-zinc-800/80 rounded-2xl overflow-hidden relative shadow-2xl"
+      <div
+        className="reveal w-full h-[600px] sm:h-[650px] bg-zinc-950 border border-zinc-800/80 rounded-2xl overflow-hidden relative shadow-2xl"
+        style={{ '--reveal-delay': '200ms' } as React.CSSProperties}
       >
         <ReactFlow
           nodes={nodes}
@@ -162,13 +155,13 @@ export const Showcase = () => {
         >
           <Background color="#27272a" gap={20} size={1.5} />
         </ReactFlow>
-        
+
         {/* Overlay hint */}
         <div className="absolute top-4 left-4 bg-zinc-900/90 backdrop-blur-md border border-zinc-800/80 px-3 py-2 rounded-lg text-[10px] sm:text-xs font-mono text-zinc-400 flex items-center gap-2 pointer-events-none z-10 shadow-lg">
           <div className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
           Interactive Canvas: Pan, Zoom & Click Nodes
         </div>
-      </motion.div>
+      </div>
 
       {/* Node Configuration Drawer */}
       {typeof document !== 'undefined' && createPortal(
@@ -176,7 +169,7 @@ export const Showcase = () => {
           {selectedStudy && (
             <>
               {/* Backdrop */}
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
@@ -184,9 +177,9 @@ export const Showcase = () => {
                 onClick={() => setSelectedStudy(null)}
                 className="fixed inset-0 bg-zinc-950/60 backdrop-blur-sm z-[100]"
               />
-              
+
               {/* Drawer */}
-              <motion.div 
+              <motion.div
                 initial={{ x: '100%' }}
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
@@ -199,7 +192,7 @@ export const Showcase = () => {
                     <Settings2 className="w-5 h-5 text-cyan-500" />
                     NODE_CONFIGURATION
                   </div>
-                  <button 
+                  <button
                     onClick={() => setSelectedStudy(null)}
                     className="text-zinc-500 hover:text-zinc-300 transition-colors p-1"
                   >
@@ -209,7 +202,7 @@ export const Showcase = () => {
 
                 {/* Drawer Content (Form-like) */}
                 <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-transparent">
-                  
+
                   {/* Field: ID & Status */}
                   <div className="flex gap-4">
                     <div className="flex-1 space-y-2">
@@ -282,10 +275,10 @@ export const Showcase = () => {
                 {/* Drawer Footer (Actions) */}
                 <div className="p-6 border-t border-zinc-800/80 bg-zinc-900/30 shrink-0 flex gap-3">
                   {selectedStudy.details?.liveUrl && (
-                    <a 
-                      href={selectedStudy.details.liveUrl} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
+                    <a
+                      href={selectedStudy.details.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-zinc-950 text-sm font-bold rounded-lg transition-colors"
                     >
                       <Play className="w-4 h-4 fill-zinc-950" />
@@ -293,10 +286,10 @@ export const Showcase = () => {
                     </a>
                   )}
                   {selectedStudy.details?.githubUrl && (
-                    <a 
-                      href={selectedStudy.details.githubUrl} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
+                    <a
+                      href={selectedStudy.details.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-100 text-sm font-medium rounded-lg transition-colors border border-zinc-700"
                     >
                       <Code2 className="w-4 h-4" />

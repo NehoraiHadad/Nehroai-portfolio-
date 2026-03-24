@@ -3,45 +3,38 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Mail, FileText, Terminal, Send, CheckCircle2 } from 'lucide-react';
+import { useReveal } from '@/lib/useReveal';
 
 export const Dossier = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const ref = useReveal<HTMLElement>();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !message) return;
-    
+
     setIsSubmitting(true);
-    // Simulate network request
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
       setEmail('');
       setMessage('');
-      
-      // Reset success message after 5 seconds
       setTimeout(() => setIsSubmitted(false), 5000);
     }, 2000);
   };
 
   return (
-    <section id="dossier" className="py-24 px-6 relative z-10 border-t border-zinc-800/50 bg-zinc-900/20 backdrop-blur-sm">
-      <motion.div 
-        initial={{ opacity: 0, y: 40, filter: 'blur(10px)' }}
-        whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-        viewport={{ once: true, margin: "-100px" }}
-        transition={{ duration: 1, easings: [0.22, 1, 0.36, 1] }}
-        className="max-w-5xl mx-auto bg-zinc-950/80 backdrop-blur-xl border border-zinc-800 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden"
-      >
-        <motion.div 
+    <section id="dossier" ref={ref} className="py-24 px-6 relative z-10 border-t border-zinc-800/50 bg-zinc-900/20 backdrop-blur-sm">
+      <div className="reveal max-w-5xl mx-auto bg-zinc-950/80 backdrop-blur-xl border border-zinc-800 rounded-3xl p-8 md:p-12 shadow-2xl relative overflow-hidden">
+        <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 20, repeat: Infinity }}
-          className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" 
+          className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"
         />
-        
+
         <div className="relative z-10 grid lg:grid-cols-2 gap-12">
           {/* Left Column: Info */}
           <div>
@@ -52,7 +45,7 @@ export const Dossier = () => {
               </span>
               <span className="text-xs font-bold tracking-widest uppercase text-zinc-400">Available for Opportunities</span>
             </div>
-            
+
             <h2 className="text-3xl md:text-4xl font-bold text-zinc-100 mb-6 tracking-tight">Quick Dossier</h2>
             <p className="text-zinc-400 text-lg mb-10">
               Looking for a builder who understands both the intricacies of LLM orchestration and the realities of shipping production software? Let's talk.
@@ -70,10 +63,10 @@ export const Dossier = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <motion.a 
+              <motion.a
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                href="/CV_Nehorai_Hadad.pdf" 
+                href="/CV_Nehorai_Hadad.pdf"
                 download="CV_Nehorai_Hadad.pdf"
                 className="bg-zinc-100 text-zinc-950 px-8 py-4 rounded-xl font-semibold hover:bg-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-white/10"
               >
@@ -89,10 +82,10 @@ export const Dossier = () => {
               <Terminal className="w-4 h-4 text-cyan-400" />
               <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Secure Transmission</span>
             </div>
-            
+
             <div className="p-6 flex-grow flex flex-col">
               {isSubmitted ? (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   className="flex flex-col items-center justify-center h-full text-center space-y-4"
@@ -107,8 +100,8 @@ export const Dossier = () => {
                 <form onSubmit={handleSubmit} className="flex flex-col h-full space-y-4">
                   <div>
                     <label htmlFor="email" className="block text-xs font-mono text-cyan-500 mb-2 uppercase tracking-wider">Sender ID [Email]</label>
-                    <input 
-                      type="email" 
+                    <input
+                      type="email"
                       id="email"
                       required
                       value={email}
@@ -120,7 +113,7 @@ export const Dossier = () => {
                   </div>
                   <div className="flex-grow flex flex-col">
                     <label htmlFor="message" className="block text-xs font-mono text-cyan-500 mb-2 uppercase tracking-wider">Payload [Message]</label>
-                    <textarea 
+                    <textarea
                       id="message"
                       required
                       value={message}
@@ -130,7 +123,7 @@ export const Dossier = () => {
                       placeholder="Enter transmission data here..."
                     />
                   </div>
-                  <button 
+                  <button
                     type="submit"
                     disabled={isSubmitting || !email || !message}
                     className="w-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 py-3 rounded-lg font-mono text-sm uppercase tracking-widest hover:bg-cyan-500 hover:text-zinc-950 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
@@ -152,7 +145,7 @@ export const Dossier = () => {
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 };
