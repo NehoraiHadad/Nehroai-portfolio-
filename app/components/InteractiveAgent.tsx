@@ -20,7 +20,7 @@ const QUICK_PROMPTS = [
 export const InteractiveAgent = ({ onClose }: { onClose?: () => void } = {}) => {
   const [messages, setMessages] = useState<Message[]>([
     { id: '1', type: 'system', content: 'System initialized. Orchestrator online.' },
-    { id: '2', type: 'agent', agentName: 'PortfolioAgent', content: 'Hello. I am the orchestrator, designed to bring clarity to complex systems. How can I illuminate Nehorai\'s work for you today?' }
+    { id: '2', type: 'agent', agentName: 'PortfolioAgent', content: 'Hi. I\'m a small assistant that can answer questions about Nehorai\'s stack, projects, and how to reach him.' }
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -104,18 +104,18 @@ export const InteractiveAgent = ({ onClose }: { onClose?: () => void } = {}) => 
 
     setTimeout(() => {
       let agentName = 'PortfolioAgent';
-      let response = "I'm an orchestrator designed to showcase Nehorai's portfolio. I can shed light on his tech stack, projects, or how to contact him.";
-      
+      let response = "I can answer questions about Nehorai's stack, projects, or how to reach him. Try asking about his tech, his projects, or working together.";
+
       const lower = text.toLowerCase();
-      if (lower.includes('build') || lower.includes('project') || lower.includes('case')) {
+      if (lower.includes('build') || lower.includes('project') || lower.includes('case') || lower.includes('show')) {
         agentName = 'ShowcaseAgent';
-        response = "I specialize in autonomous systems. For example, I built an 'AI Story Weaver' that automates content generation by 10x. Scroll down to the Case Studies section to see more.";
+        response = "Four projects are featured: Podcasto (Telegram → AI podcasts on AWS), Agendo (self-hosted multi-agent dashboard), and two live client sites — ykl.org.il and judah-brigade.vercel.app. Scroll to Selected Projects for the details.";
       } else if (lower.includes('stack') || lower.includes('skill') || lower.includes('tech')) {
         agentName = 'TechAgent';
-        response = "My core stack includes React/Next.js for the frontend, Python/Node.js for the backend, and LangChain/Pinecone for LLM orchestration. I build full-stack apps that turn raw data into clear insights.";
+        response = "Day-to-day stack: Next.js 15/16 + TypeScript on the front, Node and Python on the back, PostgreSQL/pgvector for data, AWS Lambda/SQS/DynamoDB for pipelines, and LangGraph / AWS AgentCore / MCP for agents. Eight years of on-prem Linux underneath it all.";
       } else if (lower.includes('contact') || lower.includes('hire') || lower.includes('work') || lower.includes('together')) {
         agentName = 'CommAgent';
-        response = "You can reach Nehorai directly at nehorai.hadad@gmail.com or download the dossier below. He is currently open for new consulting opportunities.";
+        response = "Email: nehorai.hadad@gmail.com. Looking for full-stack or AI-engineer roles in Israel — hybrid or remote both work.";
       }
 
       setMessages(prev => [...prev, { id: Date.now().toString() + 'sys2', type: 'system', content: `> Orchestrator: Routing to ${agentName}...` }]);
@@ -141,7 +141,7 @@ export const InteractiveAgent = ({ onClose }: { onClose?: () => void } = {}) => 
         <div className="flex items-center gap-2">
           <Cpu className={`w-4 h-4 transition-colors duration-1000 ${matrixMode ? 'text-green-500' : 'text-cyan-400'}`} />
           <span className={`text-xs font-mono font-semibold tracking-wider transition-colors duration-1000 ${matrixMode ? 'text-green-500' : 'text-zinc-300'}`}>
-            {matrixMode ? 'MATRIX // UPLINK' : 'NEHOR.AI // ORCHESTRATOR'}
+            {matrixMode ? 'MATRIX // UPLINK' : 'NEHORAI // ASSISTANT'}
           </span>
         </div>
         <div className="flex items-center gap-4">

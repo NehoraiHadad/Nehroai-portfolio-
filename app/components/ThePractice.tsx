@@ -18,10 +18,10 @@ export const ThePractice = () => {
       <div className="max-w-6xl mx-auto">
         <div className="reveal text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-zinc-100 mb-4 tracking-tight">
-            The Practice
+            Stack
           </h2>
           <p className="text-zinc-400 text-lg max-w-2xl mx-auto">
-            From LLM Orchestration to Production-Ready Full Stack Apps.
+            The tools I reach for, grouped by layer.
           </p>
         </div>
 

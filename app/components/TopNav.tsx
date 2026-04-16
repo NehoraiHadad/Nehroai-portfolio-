@@ -42,7 +42,7 @@ export const TopNav = ({ mobileMenuOpen, setMobileMenuOpen }: { mobileMenuOpen: 
             </span>
           </a>
           <span className="text-[10px] text-zinc-500 tracking-widest uppercase mt-0.5 hidden sm:block">
-            The Agentic Practice // Illuminating Complex Systems
+            Nehorai Hadad // AI Engineer, Full-Stack Builder
           </span>
         </div>
 
@@ -50,7 +50,7 @@ export const TopNav = ({ mobileMenuOpen, setMobileMenuOpen }: { mobileMenuOpen: 
         <div className="hidden md:flex items-center gap-8">
           {['Practice', 'Showcase'].map((item) => (
             <a key={item} href={`#${item.toLowerCase()}`} className="text-sm font-medium text-zinc-400 hover:text-cyan-400 transition-colors">
-              {item === 'Practice' ? 'The Practice' : 'Projects'}
+              {item === 'Practice' ? 'Stack' : 'Projects'}
             </a>
           ))}
           <motion.a 
@@ -60,7 +60,7 @@ export const TopNav = ({ mobileMenuOpen, setMobileMenuOpen }: { mobileMenuOpen: 
             className="bg-zinc-100 text-zinc-950 px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-white transition-colors flex items-center gap-2 shadow-sm"
           >
             <Briefcase className="w-4 h-4" />
-            Quick Dossier
+            Contact
           </motion.a>
         </div>
 
@@ -83,10 +83,10 @@ export const TopNav = ({ mobileMenuOpen, setMobileMenuOpen }: { mobileMenuOpen: 
             className="md:hidden bg-zinc-950 border-b border-zinc-800 overflow-hidden"
           >
             <div className="flex flex-col px-6 py-4 gap-4">
-              <a href="#practice" onClick={() => setMobileMenuOpen(false)} className="text-zinc-400 hover:text-cyan-400 font-medium transition-colors">The Practice</a>
+              <a href="#practice" onClick={() => setMobileMenuOpen(false)} className="text-zinc-400 hover:text-cyan-400 font-medium transition-colors">Stack</a>
               <a href="#showcase" onClick={() => setMobileMenuOpen(false)} className="text-zinc-400 hover:text-cyan-400 font-medium transition-colors">Projects</a>
               <a href="#dossier" onClick={() => setMobileMenuOpen(false)} className="bg-zinc-100 text-zinc-950 px-4 py-2 rounded-lg text-sm font-semibold text-center mt-2">
-                Quick Dossier
+                Contact
               </a>
             </div>
           </motion.div>

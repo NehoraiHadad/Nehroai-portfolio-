@@ -7,7 +7,7 @@ import { ArrowRight, Terminal, Brain, Network, Database, Cpu, Sparkles } from 'l
 import { OpenAILogo, AnthropicLogo, GeminiLogo, N8nLogo, MetaLogo, PythonLogo, VercelLogo, DockerLogo, HuggingFaceLogo } from './TechLogos';
 import { InteractiveAgent } from './InteractiveAgent';
 
-const CYCLING_WORDS = ['Autonomy.', 'Intelligence.', 'Clarity.', 'Illumination.'];
+const CYCLING_WORDS = ['Agents.', 'Pipelines.', 'Interfaces.', 'Systems.'];
 const SCRAMBLE_CHARS = 'abcdefghijklmnopqrstuvwxyz0123456789!<>-_\\/[]{}cxz=+*^?#';
 
 const ScrambleText = () => {
@@ -553,31 +553,30 @@ export const Hero = () => (
       </div>
       
       <motion.h2 variants={item} className="text-xl md:text-2xl text-zinc-400 mb-6 font-light leading-relaxed">
-        Illuminating the black box of AI. Deploying intelligent, autonomous systems with full-stack precision.
+        AI engineer with infrastructure depth. I build agents, pipelines, and full-stack web systems — from on-prem roots to AWS-native deployments.
       </motion.h2>
-      
+
       <motion.p variants={item} className="text-lg text-zinc-500 max-w-xl mb-10">
-        I build autonomous agent systems that turn complex, raw data into clear, actionable insights. 
-        Bridging the gap between cutting-edge AI and robust, production-ready software.
+        I ship end-to-end: Next.js apps on Vercel, distributed audio pipelines on AWS Lambda, self-hosted agent dashboards with MCP. Eight years of on-prem Linux and networking under the hood.
       </motion.p>
-      
+
       <motion.div variants={item} className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-        <motion.a 
+        <motion.a
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          href="#showcase" 
+          href="#showcase"
           className="w-full sm:w-auto bg-cyan-500 text-zinc-950 px-8 py-3.5 rounded-xl font-semibold hover:bg-cyan-400 transition-colors shadow-[0_0_20px_rgba(6,182,212,0.3)] flex items-center justify-center gap-2"
         >
-          View Case Studies <ArrowRight className="w-4 h-4" />
+          See what I ship <ArrowRight className="w-4 h-4" />
         </motion.a>
-        <motion.a 
+        <motion.a
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          href="#dossier" 
+          href="#dossier"
           className="w-full sm:w-auto bg-zinc-900 border border-zinc-700 text-zinc-100 px-8 py-3.5 rounded-xl font-medium hover:bg-zinc-800 transition-colors flex items-center justify-center gap-2"
         >
           <Terminal className="w-4 h-4" />
-          Initiate Contact
+          Get in touch
         </motion.a>
       </motion.div>
     </motion.div>

@@ -46,19 +46,19 @@ export const Dossier = () => {
               <span className="text-xs font-bold tracking-widest uppercase text-zinc-400">Available for Opportunities</span>
             </div>
 
-            <h2 className="text-3xl md:text-4xl font-bold text-zinc-100 mb-6 tracking-tight">Quick Dossier</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-zinc-100 mb-6 tracking-tight">Get in touch</h2>
             <p className="text-zinc-400 text-lg mb-10">
-              Looking for a builder who understands both the intricacies of LLM orchestration and the realities of shipping production software? Let's talk.
+              I'm looking for full-stack / AI-engineer roles (Israel, hybrid or remote). If your team is building with agents, pipelines, or modern web and wants someone who's also comfortable near the metal — reach out.
             </p>
 
             <div className="space-y-6 mb-10">
               <motion.div whileHover={{ x: 5 }} className="bg-zinc-900/50 border border-zinc-800/80 p-6 rounded-2xl hover:border-cyan-500/30 transition-colors">
-                <h4 className="text-zinc-100 font-semibold mb-2">Independent Consultant</h4>
-                <p className="text-zinc-400 text-sm">Partnering with forward-thinking teams to architect and deploy agentic solutions.</p>
+                <h4 className="text-zinc-100 font-semibold mb-2">AI + Agents</h4>
+                <p className="text-zinc-400 text-sm">LangGraph, AWS AgentCore, MCP, RAG with pgvector — built end-to-end, not glued together.</p>
               </motion.div>
               <motion.div whileHover={{ x: 5 }} className="bg-zinc-900/50 border border-zinc-800/80 p-6 rounded-2xl hover:border-cyan-500/30 transition-colors">
-                <h4 className="text-zinc-100 font-semibold mb-2">Full-Stack Engineer</h4>
-                <p className="text-zinc-400 text-sm">End-to-end execution from database design to polished, responsive user interfaces.</p>
+                <h4 className="text-zinc-100 font-semibold mb-2">Full-Stack + Infra</h4>
+                <p className="text-zinc-400 text-sm">Next.js on the front, Python/Node on the back, Linux on the floor. Eight years of on-prem instincts that don't break under load.</p>
               </motion.div>
             </div>
 
@@ -80,7 +80,7 @@ export const Dossier = () => {
           <div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl overflow-hidden flex flex-col shadow-xl">
             <div className="bg-zinc-950 px-4 py-3 border-b border-zinc-800 flex items-center gap-2">
               <Terminal className="w-4 h-4 text-cyan-400" />
-              <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Secure Transmission</span>
+              <span className="text-xs font-mono text-zinc-400 uppercase tracking-widest">Send a message</span>
             </div>
 
             <div className="p-6 flex-grow flex flex-col">
@@ -93,13 +93,13 @@ export const Dossier = () => {
                   <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center text-green-400 mb-2">
                     <CheckCircle2 className="w-8 h-8" />
                   </div>
-                  <h3 className="text-xl font-bold text-zinc-100">Transmission Successful</h3>
-                  <p className="text-zinc-400 text-sm">Your message has been encrypted and sent to Nehorai's secure inbox. Expect a reply shortly.</p>
+                  <h3 className="text-xl font-bold text-zinc-100">Thanks — message received.</h3>
+                  <p className="text-zinc-400 text-sm">I'll reply within a day or two.</p>
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit} className="flex flex-col h-full space-y-4">
                   <div>
-                    <label htmlFor="email" className="block text-xs font-mono text-cyan-500 mb-2 uppercase tracking-wider">Sender ID [Email]</label>
+                    <label htmlFor="email" className="block text-xs font-mono text-cyan-500 mb-2 uppercase tracking-wider">Your email</label>
                     <input
                       type="email"
                       id="email"
@@ -112,7 +112,7 @@ export const Dossier = () => {
                     />
                   </div>
                   <div className="flex-grow flex flex-col">
-                    <label htmlFor="message" className="block text-xs font-mono text-cyan-500 mb-2 uppercase tracking-wider">Payload [Message]</label>
+                    <label htmlFor="message" className="block text-xs font-mono text-cyan-500 mb-2 uppercase tracking-wider">Message</label>
                     <textarea
                       id="message"
                       required
@@ -131,12 +131,12 @@ export const Dossier = () => {
                     {isSubmitting ? (
                       <>
                         <div className="w-4 h-4 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
-                        Encrypting...
+                        Sending...
                       </>
                     ) : (
                       <>
                         <Send className="w-4 h-4" />
-                        Transmit
+                        Send
                       </>
                     )}
                   </button>

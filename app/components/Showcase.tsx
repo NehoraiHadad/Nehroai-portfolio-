@@ -26,10 +26,10 @@ const OrchestratorNode = ({ data }: { data: any }) => (
       <div className="absolute inset-0 rounded-xl bg-cyan-400/20 animate-ping opacity-20" />
       <Network className="w-6 h-6" />
     </div>
-    <div className="text-sm font-bold text-zinc-100 tracking-wide">Agent Orchestrator</div>
+    <div className="text-sm font-bold text-zinc-100 tracking-wide">Nehorai // Builder</div>
     <div className="text-[10px] text-cyan-400 font-mono mt-2 flex items-center gap-1.5 bg-cyan-500/10 px-2 py-1 rounded-full border border-cyan-500/20">
       <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-      STATUS: ACTIVE
+      SHIPPING
     </div>
     <Handle
       type="source"
@@ -73,8 +73,8 @@ const nodeTypes = {
 export const Showcase = () => {
   const [selectedStudy, setSelectedStudy] = useState<CaseStudy | null>(null);
   const [isMobile, setIsMobile] = useState(false);
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<any>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<any>([]);
   const ref = useReveal<HTMLElement>();
 
   useEffect(() => {
@@ -125,9 +125,9 @@ export const Showcase = () => {
   return (
     <section id="showcase" ref={ref} className="py-24 px-4 sm:px-6 max-w-7xl mx-auto relative z-10">
       <div className="reveal mb-12">
-        <h2 className="text-3xl md:text-4xl font-bold text-zinc-100 mb-4 tracking-tight">Agentic Workflows</h2>
+        <h2 className="text-3xl md:text-4xl font-bold text-zinc-100 mb-4 tracking-tight">Selected Projects</h2>
         <p className="text-zinc-400 text-lg max-w-2xl">
-          Interactive architecture map. Click on any node to inspect the deployment details and configuration.
+          Click any node for the build details, the live link, and the source.
         </p>
       </div>
 
@@ -159,7 +159,7 @@ export const Showcase = () => {
         {/* Overlay hint */}
         <div className="absolute top-4 left-4 bg-zinc-900/90 backdrop-blur-md border border-zinc-800/80 px-3 py-2 rounded-lg text-[10px] sm:text-xs font-mono text-zinc-400 flex items-center gap-2 pointer-events-none z-10 shadow-lg">
           <div className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
-          Interactive Canvas: Pan, Zoom & Click Nodes
+          Pan, zoom, click a node
         </div>
       </div>
 
@@ -282,7 +282,7 @@ export const Showcase = () => {
                       className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-zinc-950 text-sm font-bold rounded-lg transition-colors"
                     >
                       <Play className="w-4 h-4 fill-zinc-950" />
-                      Execute Node
+                      Open live site
                     </a>
                   )}
                   {selectedStudy.details?.githubUrl && (
@@ -293,7 +293,7 @@ export const Showcase = () => {
                       className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-100 text-sm font-medium rounded-lg transition-colors border border-zinc-700"
                     >
                       <Code2 className="w-4 h-4" />
-                      View Source
+                      View on GitHub
                     </a>
                   )}
                 </div>
