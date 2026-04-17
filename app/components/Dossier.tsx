@@ -48,7 +48,7 @@ export const Dossier = () => {
 
             <h2 className="text-3xl md:text-4xl font-bold text-zinc-100 mb-6 tracking-tight">Get in touch</h2>
             <p className="text-zinc-400 text-lg mb-10">
-              I'm looking for full-stack / AI-engineer roles (Israel, hybrid or remote). If your team is building with agents, pipelines, or modern web and wants someone who's also comfortable near the metal — reach out.
+              I'm looking for full-stack / AI-engineer roles (Israel, hybrid or remote). If your team is building AI products, automation workflows, or modern web and wants someone who's also comfortable near the metal — reach out.
             </p>
 
             <div className="space-y-6 mb-10">
