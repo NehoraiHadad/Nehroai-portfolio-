@@ -58,7 +58,7 @@ export const Dossier = () => {
               </motion.div>
               <motion.div whileHover={{ x: 5 }} className="bg-zinc-900/50 border border-zinc-800/80 p-6 rounded-2xl hover:border-cyan-500/30 transition-colors">
                 <h4 className="text-zinc-100 font-semibold mb-2">Full-Stack + Infra</h4>
-                <p className="text-zinc-400 text-sm">Next.js on the front, Python/Node on the back, Linux on the floor. Eight years of on-prem instincts that don't break under load.</p>
+                <p className="text-zinc-400 text-sm">Next.js on the front, Python/Node on the back, hardware on the floor. Eight years of on-prem datacenter instincts that don't break under load.</p>
               </motion.div>
             </div>
 

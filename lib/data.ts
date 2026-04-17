@@ -67,5 +67,5 @@ export const SKILLS: SkillGroup[] = [
   { category: 'AI & Agents', items: ['LangGraph', 'AWS AgentCore', 'Strands Agents SDK', 'MCP', 'RAG + pgvector'] },
   { category: 'Full-Stack Web', items: ['Next.js 15/16', 'React 19', 'TypeScript', 'Tailwind + shadcn/ui'] },
   { category: 'Backend & Data', items: ['Node.js', 'Python', 'PostgreSQL', 'Supabase + Drizzle'] },
-  { category: 'Cloud & Infra', items: ['AWS (Lambda, SQS, SES, DynamoDB)', 'Docker + PM2', '8 yrs on-prem datacenter', 'Linux / networking'] },
+  { category: 'Cloud & Infra', items: ['AWS (Lambda, SQS, SES, DynamoDB)', 'Docker + PM2', '8 yrs on-prem datacenter', 'Server hardware & physical infra'] },
 ];

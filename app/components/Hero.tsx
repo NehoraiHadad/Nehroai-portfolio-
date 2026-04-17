@@ -557,7 +557,7 @@ export const Hero = () => (
       </motion.h2>
 
       <motion.p variants={item} className="text-lg text-zinc-500 max-w-xl mb-10">
-        I ship end-to-end: Next.js apps on Vercel, distributed audio pipelines on AWS Lambda, self-hosted agent dashboards with MCP. Eight years of on-prem Linux and networking under the hood.
+        I ship end-to-end: Next.js apps on Vercel, distributed audio pipelines on AWS Lambda, self-hosted agent dashboards with MCP. Eight years of on-prem datacenter and server hardware under the hood.
       </motion.p>
 
       <motion.div variants={item} className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
