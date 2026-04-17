@@ -5,14 +5,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import { FileText, Send, Lock } from 'lucide-react';
 import { useReveal } from '@/lib/useReveal';
 import { sendContact } from '@/app/lib/actions/contact';
+import { useDictionary, useDirection } from '@/lib/i18n/provider';
 
 type SubmitPhase = '' | 'encrypting' | 'transmitting';
-
-const INIT_LINES = [
-  '> INITIALIZING SECURE CHANNEL...',
-  '> ESTABLISHING ENCRYPTED TUNNEL...',
-  '> CHANNEL READY.',
-];
 
 const AsciiBar = ({ pct, label }: { pct: number; label: string }) => {
   const filled = Math.round(pct / 10);
@@ -22,13 +17,16 @@ const AsciiBar = ({ pct, label }: { pct: number; label: string }) => {
       <p>
         <span className="text-cyan-400">{'█'.repeat(filled)}</span>
         <span className="text-zinc-700">{'░'.repeat(10 - filled)}</span>
-        <span className="text-zinc-400 ml-2">{pct}%</span>
+        <span className="text-zinc-400" style={{ marginInlineStart: '0.5rem' }}>{pct}%</span>
       </p>
     </div>
   );
 };
 
 export const Dossier = () => {
+  const { dossier } = useDictionary();
+  const direction = useDirection();
+  const isRtl = direction === 'rtl';
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -87,16 +85,15 @@ export const Dossier = () => {
 
       <div className="reveal max-w-5xl mx-auto">
 
-        {/* Section label */}
-        <div className="flex items-center gap-4 mb-16">
-          <span className="font-mono text-[10px] text-zinc-600 uppercase tracking-[0.2em]">04 — CONTACT</span>
+          {/* Section label */}
+          <div className="flex items-center gap-4 mb-16">
+          <span className="font-mono text-[10px] text-zinc-600 uppercase tracking-[0.2em]">{dossier.sectionLabel}</span>
           <div className="h-px flex-1 bg-zinc-800" />
         </div>
 
         <div className="grid lg:grid-cols-[1fr_1.1fr] gap-16 items-start">
 
-          {/* ── LEFT ─────────────────────────────── */}
-          <div className="flex flex-col gap-10">
+          <div className={`flex flex-col gap-10 ${isRtl ? 'lg:order-2' : 'lg:order-1'}`} style={{ textAlign: 'start' }}>
 
             {/* Headline */}
             <div>
@@ -105,29 +102,25 @@ export const Dossier = () => {
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
                 </span>
-                <span className="font-mono text-[10px] text-green-400 tracking-[0.15em] uppercase">Available · Israel / Remote</span>
+                <span className="font-mono text-[10px] text-green-400 tracking-[0.15em] uppercase">{dossier.availability}</span>
               </div>
 
               <h2 className="font-display text-5xl md:text-6xl font-bold text-zinc-100 leading-[1.05] tracking-tight mb-5">
-                Open to<br />
-                the right<br />
+                {dossier.titleLines[0]}<br />
+                {dossier.titleLines[1]}<br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-cyan-600">
-                  opportunity.
+                  {dossier.titleHighlight}
                 </span>
               </h2>
 
               <p className="text-zinc-400 text-base leading-relaxed max-w-xs">
-                Full-stack + AI roles. Building AI products, automation, or modern web infrastructure? Let's talk.
+                {dossier.description}
               </p>
             </div>
 
             {/* Stack lines */}
             <div className="space-y-4">
-              {[
-                { tag: 'AI', stack: 'LangGraph · AgentCore · MCP · RAG' },
-                { tag: 'WEB', stack: 'Next.js · React · TypeScript · Python' },
-                { tag: 'INFRA', stack: 'Oracle Cloud · Docker · PM2 · On-prem' },
-              ].map(({ tag, stack }) => (
+              {dossier.stackLines.map(({ tag, stack }) => (
                 <div key={tag} className="flex items-center gap-4">
                   <span className="font-mono text-[9px] text-cyan-500 tracking-widest w-8">{tag}</span>
                   <div className="h-px w-4 bg-zinc-700" />
@@ -139,19 +132,18 @@ export const Dossier = () => {
             {/* CV */}
             <motion.a
               whileHover={{ x: 4 }}
-              href="/Nehorai Hadad CV - SW.pdf"
-              download="Nehorai Hadad CV - SW.pdf"
+              href={dossier.resumeFile}
+              download={dossier.resumeDownloadName}
               className="inline-flex items-center gap-3 text-zinc-400 hover:text-zinc-100 transition-colors text-sm font-medium w-fit group"
             >
               <span className="w-8 h-8 rounded-lg border border-zinc-800 group-hover:border-zinc-600 flex items-center justify-center transition-colors">
                 <FileText className="w-3.5 h-3.5" />
               </span>
-              Download Resume
+              {dossier.resumeCta}
             </motion.a>
           </div>
 
-          {/* ── RIGHT: Terminal ───────────────────── */}
-          <div className="relative">
+          <div className={`relative ${isRtl ? 'lg:order-1' : 'lg:order-2'}`} style={{ textAlign: 'start' }}>
             {/* Outer glow */}
             <div className="absolute -inset-3 bg-cyan-500/[0.03] rounded-3xl blur-2xl" />
 
@@ -163,11 +155,13 @@ export const Dossier = () => {
                   <div className="w-3 h-3 rounded-full bg-zinc-700 hover:bg-red-400 transition-colors cursor-default" />
                   <div className="w-3 h-3 rounded-full bg-zinc-700 hover:bg-amber-400 transition-colors cursor-default" />
                   <div className="w-3 h-3 rounded-full bg-zinc-700 hover:bg-green-400 transition-colors cursor-default" />
-                  <span className="font-mono text-[10px] text-zinc-600 ml-3 select-none">secure_channel.sh</span>
+                  <span className="font-mono text-[10px] text-zinc-600 select-none" style={{ marginInlineStart: '0.75rem' }}>
+                    {dossier.terminalFileName}
+                  </span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Lock className="w-3 h-3 text-green-500" />
-                  <span className="font-mono text-[9px] text-green-500 tracking-widest">TLS 1.3</span>
+                  <span className="font-mono text-[9px] text-green-500 tracking-widest">{dossier.securityLabel}</span>
                 </div>
               </div>
 
@@ -188,7 +182,7 @@ export const Dossier = () => {
                       exit={{ opacity: 0 }}
                       className="flex-grow flex flex-col justify-center gap-2"
                     >
-                      {INIT_LINES.map((line, i) => (
+                      {dossier.initLines.map((line, i) => (
                         <AnimatePresence key={i}>
                           {initStep >= i && (
                             <motion.p
@@ -198,8 +192,11 @@ export const Dossier = () => {
                               className={`font-mono text-xs ${i < initStep ? 'text-zinc-600' : 'text-cyan-400'}`}
                             >
                               {line}
-                              {i === initStep && i < INIT_LINES.length - 1 && (
-                                <span className="inline-block w-[6px] h-[12px] bg-cyan-400 ml-1 animate-pulse align-middle" />
+                              {i === initStep && i < dossier.initLines.length - 1 && (
+                                <span
+                                  className="inline-block w-[6px] h-[12px] bg-cyan-400 animate-pulse align-middle"
+                                  style={{ marginInlineStart: '0.25rem' }}
+                                />
                               )}
                             </motion.p>
                           )}
@@ -219,7 +216,7 @@ export const Dossier = () => {
                     >
                       <AsciiBar
                         pct={submitPhase === 'encrypting' ? 55 : 100}
-                        label={submitPhase === 'encrypting' ? '> ENCRYPTING PAYLOAD...' : '> TRANSMITTING...'}
+                        label={submitPhase === 'encrypting' ? dossier.progressLabels.encrypting : dossier.progressLabels.transmitting}
                       />
                       <motion.p
                         animate={{ opacity: [0.4, 1, 0.4] }}
@@ -227,8 +224,8 @@ export const Dossier = () => {
                         className="font-mono text-[10px] text-zinc-600"
                       >
                         {submitPhase === 'encrypting'
-                          ? '  securing your message...'
-                          : '  routing to nehoraihadad.com...'}
+                          ? dossier.progressLabels.encryptingHint
+                          : dossier.progressLabels.transmittingHint}
                       </motion.p>
                     </motion.div>
                   )}
@@ -242,11 +239,11 @@ export const Dossier = () => {
                       className="flex-grow flex flex-col justify-center gap-2 font-mono text-xs"
                     >
                       <p className="text-zinc-700">{'─'.repeat(32)}</p>
-                      <p><span className="text-zinc-600">&gt; </span><span className="text-green-400">STATUS: DELIVERED ✓</span></p>
-                      <p><span className="text-zinc-600">&gt; </span><span className="text-zinc-400">RESPONSE_ETA: 24–48H</span></p>
+                      <p><span className="text-zinc-600">&gt; </span><span className="text-green-400">{dossier.success.delivered}</span></p>
+                      <p><span className="text-zinc-600">&gt; </span><span className="text-zinc-400">{dossier.success.eta}</span></p>
                       <p className="text-zinc-700">{'─'.repeat(32)}</p>
-                      <p className="text-zinc-500 pt-2">Thanks — message received.</p>
-                      <p className="text-zinc-600">I'll reply within a day or two.</p>
+                      <p className="text-zinc-500 pt-2">{dossier.success.title}</p>
+                      <p className="text-zinc-600">{dossier.success.description}</p>
                       <span className="inline-block w-[6px] h-[12px] bg-zinc-700 animate-pulse mt-1" />
                     </motion.div>
                   )}
@@ -266,7 +263,7 @@ export const Dossier = () => {
                         <div className="flex items-baseline gap-2 mb-2">
                           <span className="font-mono text-xs text-zinc-600">&gt;</span>
                           <label htmlFor="name" className="font-mono text-[10px] text-cyan-500 uppercase tracking-widest">
-                            SENDER_NAME
+                            {dossier.form.nameLabel}
                           </label>
                         </div>
                         <input
@@ -276,7 +273,8 @@ export const Dossier = () => {
                           value={name}
                           onChange={(e) => { setName(e.target.value); setError(null); }}
                           disabled={isSubmitting}
-                          placeholder="Your name"
+                          placeholder={dossier.form.namePlaceholder}
+                          dir="auto"
                           className="w-full bg-transparent border-0 border-b border-zinc-800 focus:border-cyan-500/40 text-zinc-200 text-sm font-mono py-2 placeholder:text-zinc-700 focus:outline-none transition-colors disabled:opacity-40"
                         />
                       </div>
@@ -286,7 +284,7 @@ export const Dossier = () => {
                         <div className="flex items-baseline gap-2 mb-2">
                           <span className="font-mono text-xs text-zinc-600">&gt;</span>
                           <label htmlFor="email" className="font-mono text-[10px] text-cyan-500 uppercase tracking-widest">
-                            SENDER_EMAIL
+                            {dossier.form.emailLabel}
                           </label>
                         </div>
                         <input
@@ -296,7 +294,8 @@ export const Dossier = () => {
                           value={email}
                           onChange={(e) => { setEmail(e.target.value); setError(null); }}
                           disabled={isSubmitting}
-                          placeholder="you@company.com"
+                          placeholder={dossier.form.emailPlaceholder}
+                          dir="auto"
                           className="w-full bg-transparent border-0 border-b border-zinc-800 focus:border-cyan-500/40 text-zinc-200 text-sm font-mono py-2 placeholder:text-zinc-700 focus:outline-none transition-colors disabled:opacity-40"
                         />
                       </div>
@@ -306,7 +305,7 @@ export const Dossier = () => {
                         <div className="flex items-baseline gap-2 mb-2">
                           <span className="font-mono text-xs text-zinc-600">&gt;</span>
                           <label htmlFor="message" className="font-mono text-[10px] text-cyan-500 uppercase tracking-widest">
-                            MESSAGE_BODY
+                            {dossier.form.messageLabel}
                           </label>
                         </div>
                         <textarea
@@ -315,7 +314,8 @@ export const Dossier = () => {
                           value={message}
                           onChange={(e) => { setMessage(e.target.value); setError(null); }}
                           disabled={isSubmitting}
-                          placeholder="Enter transmission data..."
+                          placeholder={dossier.form.messagePlaceholder}
+                          dir="auto"
                           className="flex-grow w-full bg-transparent border-0 border-b border-zinc-800 focus:border-cyan-500/40 text-zinc-200 text-sm font-mono py-2 placeholder:text-zinc-700 focus:outline-none transition-colors resize-none disabled:opacity-40 min-h-[90px]"
                         />
                       </div>
@@ -323,7 +323,7 @@ export const Dossier = () => {
                       {/* Error */}
                       {error && (
                         <p className="font-mono text-[11px] text-red-400" aria-live="polite">
-                          <span className="text-zinc-600">&gt; ERR: </span>{error}
+                          <span className="text-zinc-600">{dossier.form.errorPrefix}</span>{error}
                         </p>
                       )}
 
@@ -334,7 +334,7 @@ export const Dossier = () => {
                         className="flex items-center justify-center gap-2 py-3 rounded-lg font-mono text-[11px] uppercase tracking-widest border border-cyan-500/25 text-cyan-400 bg-cyan-500/5 hover:bg-cyan-500 hover:text-zinc-950 hover:border-cyan-500 transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed"
                       >
                         <Send className="w-3.5 h-3.5" />
-                        TRANSMIT
+                        {dossier.form.submitLabel}
                       </button>
                     </motion.form>
                   )}

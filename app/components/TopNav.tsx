@@ -3,9 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Briefcase, Menu, X } from 'lucide-react';
+import { useDictionary, useDirection } from '@/lib/i18n/provider';
 
 export const TopNav = ({ mobileMenuOpen, setMobileMenuOpen }: { mobileMenuOpen: boolean, setMobileMenuOpen: (v: boolean) => void }) => {
   const [dotIgnited, setDotIgnited] = useState(false);
+  const { navigation } = useDictionary();
+  const direction = useDirection();
+  const isRtl = direction === 'rtl';
 
   useEffect(() => {
     // Dot ignites after neon "ai" ignition stabilizes (~3.5s end + 0.3s buffer)
@@ -23,7 +27,7 @@ export const TopNav = ({ mobileMenuOpen, setMobileMenuOpen }: { mobileMenuOpen: 
     >
       <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
         {/* Logo Area */}
-        <div className="flex flex-col justify-center">
+        <div className="flex flex-col justify-center" style={{ textAlign: 'start' }}>
           <a href="#" aria-label="Nehorai" className="text-2xl font-bold tracking-tighter text-zinc-100 relative group inline-block w-max">
             <span aria-hidden="true">
               Nehor
@@ -42,15 +46,18 @@ export const TopNav = ({ mobileMenuOpen, setMobileMenuOpen }: { mobileMenuOpen: 
             </span>
           </a>
           <span className="text-[10px] text-zinc-500 tracking-widest uppercase mt-0.5 hidden sm:block">
-            Nehorai Hadad // AI Engineer, Full-Stack Builder
+            {navigation.eyebrow}
           </span>
         </div>
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-8">
-          {['Practice', 'Showcase'].map((item) => (
-            <a key={item} href={`#${item.toLowerCase()}`} className="text-sm font-medium text-zinc-400 hover:text-cyan-400 transition-colors">
-              {item === 'Practice' ? 'Stack' : 'Projects'}
+          {[
+            { href: '#practice', label: navigation.links.practice },
+            { href: '#showcase', label: navigation.links.showcase },
+          ].map((item) => (
+            <a key={item.href} href={item.href} className="text-sm font-medium text-zinc-400 hover:text-cyan-400 transition-colors">
+              {item.label}
             </a>
           ))}
           <motion.a 
@@ -59,8 +66,9 @@ export const TopNav = ({ mobileMenuOpen, setMobileMenuOpen }: { mobileMenuOpen: 
             href="#dossier" 
             className="bg-zinc-100 text-zinc-950 px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-white transition-colors flex items-center gap-2 shadow-sm"
           >
-            <Briefcase className="w-4 h-4" />
-            Contact
+            {isRtl ? null : <Briefcase className="w-4 h-4" />}
+            {navigation.contactCta}
+            {isRtl ? <Briefcase className="w-4 h-4" /> : null}
           </motion.a>
         </div>
 
@@ -83,10 +91,10 @@ export const TopNav = ({ mobileMenuOpen, setMobileMenuOpen }: { mobileMenuOpen: 
             className="md:hidden bg-zinc-950 border-b border-zinc-800 overflow-hidden"
           >
             <div className="flex flex-col px-6 py-4 gap-4">
-              <a href="#practice" onClick={() => setMobileMenuOpen(false)} className="text-zinc-400 hover:text-cyan-400 font-medium transition-colors">Stack</a>
-              <a href="#showcase" onClick={() => setMobileMenuOpen(false)} className="text-zinc-400 hover:text-cyan-400 font-medium transition-colors">Projects</a>
+              <a href="#practice" onClick={() => setMobileMenuOpen(false)} className="text-zinc-400 hover:text-cyan-400 font-medium transition-colors">{navigation.links.practice}</a>
+              <a href="#showcase" onClick={() => setMobileMenuOpen(false)} className="text-zinc-400 hover:text-cyan-400 font-medium transition-colors">{navigation.links.showcase}</a>
               <a href="#dossier" onClick={() => setMobileMenuOpen(false)} className="bg-zinc-100 text-zinc-950 px-4 py-2 rounded-lg text-sm font-semibold text-center mt-2">
-                Contact
+                {navigation.contactCta}
               </a>
             </div>
           </motion.div>

@@ -1,26 +1,31 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { motion } from 'motion/react';
-import { ArrowRight, Terminal, Brain, Network, Database, Cpu, Sparkles } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Terminal, Brain, Network, Database, Cpu, Sparkles } from 'lucide-react';
 import { OpenAILogo, AnthropicLogo, GeminiLogo, N8nLogo, MetaLogo, PythonLogo, VercelLogo, DockerLogo, HuggingFaceLogo } from './TechLogos';
 import { InteractiveAgent } from './InteractiveAgent';
+import { useDictionary, useDirection } from '@/lib/i18n/provider';
 
-const CYCLING_WORDS = ['Agents.', 'Workflows.', 'Interfaces.', 'Systems.'];
 const SCRAMBLE_CHARS = 'abcdefghijklmnopqrstuvwxyz0123456789!<>-_\\/[]{}cxz=+*^?#';
 
-const ScrambleText = () => {
-  const [text, setText] = useState(CYCLING_WORDS[0]);
-  const [targetWord, setTargetWord] = useState(CYCLING_WORDS[0]);
+const ScrambleText = ({ words, isRtl }: { words: string[]; isRtl: boolean }) => {
+  const initialWord = words[0] ?? '';
+  const [text, setText] = useState(initialWord);
+  const [targetWord, setTargetWord] = useState(initialWord);
 
   useEffect(() => {
+    if (words.length === 0) {
+      return;
+    }
+
     let currentIndex = 0;
     let scrambleInterval: NodeJS.Timeout;
 
     const cycleInterval = setInterval(() => {
-      currentIndex = (currentIndex + 1) % CYCLING_WORDS.length;
-      const nextWord = CYCLING_WORDS[currentIndex];
+      currentIndex = (currentIndex + 1) % words.length;
+      const nextWord = words[currentIndex];
       setTargetWord(nextWord);
       let iteration = 0;
 
@@ -48,14 +53,17 @@ const ScrambleText = () => {
       clearInterval(cycleInterval);
       clearInterval(scrambleInterval);
     };
-  }, []);
+  }, [words]);
 
   return (
     <span className="relative inline-block whitespace-nowrap">
       {/* Invisible target word dictates the container width, preventing layout shifts */}
       <span className="invisible">{targetWord}</span>
       {/* Absolutely positioned scrambling text doesn't affect document flow */}
-      <span className="absolute left-0 top-0 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+      <span
+        className="absolute top-0 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500"
+        style={isRtl ? { right: 0 } : { left: 0 }}
+      >
         {text}
       </span>
     </span>
@@ -328,6 +336,7 @@ const RecessedSymbol = React.memo(({ el, brightness, isMobile }: {
     </div>
   );
 });
+RecessedSymbol.displayName = 'RecessedSymbol';
 
 // Select a random subset of elements per page load for variety
 // 23 total elements; always show all deep ones + a random selection of the rest
@@ -526,70 +535,86 @@ const IlluminationBackground = () => {
   );
 };
 
-export const Hero = () => (
-  <section className="pt-32 pb-24 px-6 max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10 min-h-[90vh]">
-    <IlluminationBackground />
-    {/* Left: Text Content */}
-    <motion.div variants={container} initial="hidden" animate="show" className="flex flex-col items-start text-left">
-      <motion.div variants={item} className="flex items-center gap-2 mb-6 bg-zinc-900/50 border border-zinc-800 px-3 py-1.5 rounded-full">
-        <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-        <span className="text-cyan-400 text-[10px] font-mono font-bold tracking-[0.2em] uppercase">
-          System.Status: Online
-        </span>
-      </motion.div>
-      
-      <div className="text-5xl md:text-7xl font-bold text-zinc-100 mb-6 tracking-tight leading-tight">
-        <motion.div variants={wordVariants} initial="hidden" animate="show" className="inline-block overflow-hidden pb-2">
-          {"Engineering".split('').map((char, i) => (
-            <motion.span key={i} variants={charVariants} className="inline-block">
-              {char}
-            </motion.span>
-          ))}
+export const Hero = () => {
+  const { hero } = useDictionary();
+  const direction = useDirection();
+  const isRtl = direction === 'rtl';
+  const CtaArrow = isRtl ? ArrowLeft : ArrowRight;
+
+  return (
+    <section className="pt-32 pb-24 px-6 max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10 min-h-[90vh]">
+      <IlluminationBackground />
+      {/* Text Content */}
+      <motion.div
+        variants={container}
+        initial="hidden"
+        animate="show"
+        className={`flex flex-col items-start ${isRtl ? 'lg:order-2' : 'lg:order-1'}`}
+        style={{ textAlign: 'start' }}
+      >
+        <motion.div variants={item} className="flex items-center gap-2 mb-6 bg-zinc-900/50 border border-zinc-800 px-3 py-1.5 rounded-full">
+          <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+          <span className="text-cyan-400 text-[10px] font-mono font-bold tracking-[0.2em] uppercase">
+            {hero.statusLabel}
+          </span>
         </motion.div>
-        <br />
-        <motion.div variants={item} className="inline-block overflow-hidden pb-2">
-          <ScrambleText />
+        
+        <div className="text-5xl md:text-7xl font-bold text-zinc-100 mb-6 tracking-tight leading-tight">
+          <motion.div variants={wordVariants} initial="hidden" animate="show" className="inline-block overflow-hidden pb-2">
+            {hero.titlePrefix.split('').map((char, i) => (
+              <motion.span key={i} variants={charVariants} className="inline-block">
+                {char}
+              </motion.span>
+            ))}
+          </motion.div>
+          <br />
+          <motion.div variants={item} className="inline-block overflow-hidden pb-2">
+            <ScrambleText words={hero.rotatingWords} isRtl={isRtl} />
+          </motion.div>
+        </div>
+        
+        <motion.h2 variants={item} className="text-xl md:text-2xl text-zinc-400 mb-6 font-light leading-relaxed">
+          {hero.subtitle}
+        </motion.h2>
+
+        <motion.p variants={item} className="text-lg text-zinc-500 max-w-xl mb-10">
+          {hero.body}
+        </motion.p>
+
+        <motion.div
+          variants={item}
+          className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto"
+        >
+          <motion.a
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            href="#showcase"
+            className="w-full sm:w-auto bg-cyan-500 text-zinc-950 px-8 py-3.5 rounded-xl font-semibold hover:bg-cyan-400 transition-colors shadow-[0_0_20px_rgba(6,182,212,0.3)] flex items-center justify-center gap-2"
+          >
+            {hero.primaryCta} <CtaArrow className="w-4 h-4" />
+          </motion.a>
+          <motion.a
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            href="#dossier"
+            className="w-full sm:w-auto bg-zinc-900 border border-zinc-700 text-zinc-100 px-8 py-3.5 rounded-xl font-medium hover:bg-zinc-800 transition-colors flex items-center justify-center gap-2"
+          >
+            <Terminal className="w-4 h-4" />
+            {hero.secondaryCta}
+          </motion.a>
         </motion.div>
-      </div>
-      
-      <motion.h2 variants={item} className="text-xl md:text-2xl text-zinc-400 mb-6 font-light leading-relaxed">
-        AI engineer with infrastructure depth. I build agents, workflows, and full-stack web systems.
-      </motion.h2>
-
-      <motion.p variants={item} className="text-lg text-zinc-500 max-w-xl mb-10">
-        I ship end-to-end: Next.js apps on Vercel, distributed audio pipelines on AWS Lambda, self-hosted agent dashboards with MCP. Eight years of on-prem datacenter and server hardware under the hood.
-      </motion.p>
-
-      <motion.div variants={item} className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-        <motion.a
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          href="#showcase"
-          className="w-full sm:w-auto bg-cyan-500 text-zinc-950 px-8 py-3.5 rounded-xl font-semibold hover:bg-cyan-400 transition-colors shadow-[0_0_20px_rgba(6,182,212,0.3)] flex items-center justify-center gap-2"
-        >
-          See what I ship <ArrowRight className="w-4 h-4" />
-        </motion.a>
-        <motion.a
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          href="#dossier"
-          className="w-full sm:w-auto bg-zinc-900 border border-zinc-700 text-zinc-100 px-8 py-3.5 rounded-xl font-medium hover:bg-zinc-800 transition-colors flex items-center justify-center gap-2"
-        >
-          <Terminal className="w-4 h-4" />
-          Get in touch
-        </motion.a>
       </motion.div>
-    </motion.div>
 
-    {/* Right: Interactive Agent Visual */}
-    <motion.div 
-      initial={{ opacity: 0, x: 40, filter: 'blur(10px)' }}
-      animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
-      transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      className="relative hidden lg:block"
-    >
-      <div className="absolute inset-0 bg-cyan-500/20 blur-[100px] rounded-full pointer-events-none" />
-      <InteractiveAgent />
-    </motion.div>
-  </section>
-);
+      {/* Interactive Agent Visual */}
+      <motion.div 
+        initial={{ opacity: 0, x: isRtl ? -40 : 40, filter: 'blur(10px)' }}
+        animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
+        transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        className={`relative hidden lg:block ${isRtl ? 'lg:order-1' : 'lg:order-2'}`}
+      >
+        <div className="absolute inset-0 bg-cyan-500/20 blur-[100px] rounded-full pointer-events-none" />
+        <InteractiveAgent />
+      </motion.div>
+    </section>
+  );
+};

@@ -1,16 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { TopNav } from './components/TopNav';
-import { Hero } from './components/Hero';
-import { ThePractice } from './components/ThePractice';
-import { Showcase } from './components/Showcase';
-import { Dossier } from './components/Dossier';
-import { Footer } from './components/Footer';
-import { BackgroundEffect } from './components/BackgroundEffect';
-import { MobileAgent } from './components/MobileAgent';
+import { TopNav } from './TopNav';
+import { Hero } from './Hero';
+import { ThePractice } from './ThePractice';
+import { Showcase } from './Showcase';
+import { Dossier } from './Dossier';
+import { Footer } from './Footer';
+import { BackgroundEffect } from './BackgroundEffect';
+import { MobileAgent } from './MobileAgent';
 
-export default function Home() {
+export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (

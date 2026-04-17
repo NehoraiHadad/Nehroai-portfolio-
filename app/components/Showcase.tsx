@@ -1,35 +1,50 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { X, ExternalLink, Github, Network, Cpu, Settings2, Play, Code2 } from 'lucide-react';
-import { CASE_STUDIES } from '@/lib/data';
+import { X, Network, Cpu, Settings2, Play, Code2 } from 'lucide-react';
 import { CaseStudy } from '@/lib/types';
 import { useReveal } from '@/lib/useReveal';
+import { useDictionary, useDirection } from '@/lib/i18n/provider';
+import { caseStudyIcons } from '@/lib/case-study-icons';
 import {
   ReactFlow,
   Background,
-  Controls,
   Handle,
   Position,
   MarkerType,
   useNodesState,
   useEdgesState,
+  type Edge,
+  type Node,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
-const OrchestratorNode = ({ data }: { data: any }) => (
+type OrchestratorNodeData = Record<string, unknown> & {
+  isMobile: boolean;
+  label: string;
+  shippingLabel: string;
+};
+
+type ProjectNodeData = Record<string, unknown> & CaseStudy & {
+  isMobile: boolean;
+};
+
+type ShowcaseNode = Node<OrchestratorNodeData | ProjectNodeData>;
+type ShowcaseEdge = Edge;
+
+const OrchestratorNode = ({ data }: { data: OrchestratorNodeData }) => (
   <div className="bg-zinc-950/90 backdrop-blur-xl border border-cyan-500/30 rounded-2xl p-5 w-56 shadow-[0_0_30px_rgba(6,182,212,0.15)] flex flex-col items-center text-center relative overflow-hidden group">
     <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
     <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-3 relative">
       <div className="absolute inset-0 rounded-xl bg-cyan-400/20 animate-ping opacity-20" />
       <Network className="w-6 h-6" />
     </div>
-    <div className="text-sm font-bold text-zinc-100 tracking-wide">Nehorai // Builder</div>
+    <div className="text-sm font-bold text-zinc-100 tracking-wide">{data.label}</div>
     <div className="text-[10px] text-cyan-400 font-mono mt-2 flex items-center gap-1.5 bg-cyan-500/10 px-2 py-1 rounded-full border border-cyan-500/20">
       <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-      SHIPPING
+      {data.shippingLabel}
     </div>
     <Handle
       type="source"
@@ -39,7 +54,7 @@ const OrchestratorNode = ({ data }: { data: any }) => (
   </div>
 );
 
-const ProjectNode = ({ data }: { data: any }) => {
+const ProjectNode = ({ data }: { data: ProjectNodeData }) => {
   const Icon = data.icon || Cpu;
   return (
     <div className="bg-zinc-900/90 backdrop-blur-xl border border-zinc-800 rounded-2xl p-4 sm:p-5 w-[280px] sm:w-80 shadow-xl hover:border-cyan-500/40 hover:shadow-[0_0_20px_rgba(6,182,212,0.1)] transition-all duration-300 group cursor-pointer relative overflow-hidden">
@@ -71,11 +86,22 @@ const nodeTypes = {
 };
 
 export const Showcase = () => {
+  const { showcase, caseStudies: rawCaseStudies } = useDictionary();
+  const direction = useDirection();
+  const isRtl = direction === 'rtl';
   const [selectedStudy, setSelectedStudy] = useState<CaseStudy | null>(null);
   const [isMobile, setIsMobile] = useState(false);
-  const [nodes, setNodes, onNodesChange] = useNodesState<any>([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState<any>([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<ShowcaseNode>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<ShowcaseEdge>([]);
   const ref = useReveal<HTMLElement>();
+  const caseStudies = useMemo<CaseStudy[]>(
+    () =>
+      rawCaseStudies.map((study) => ({
+        ...study,
+        icon: caseStudyIcons[study.icon],
+      })),
+    [rawCaseStudies]
+  );
 
   useEffect(() => {
     const checkMobile = () => {
@@ -93,20 +119,22 @@ export const Showcase = () => {
       {
         id: 'orchestrator',
         type: 'orchestrator',
-        position: isMobile ? { x: 0, y: 0 } : { x: 0, y: (CASE_STUDIES.length * 180) / 2 - 80 },
-        data: { isMobile },
+        position: isMobile ? { x: 0, y: 0 } : { x: isRtl ? 600 : 0, y: (caseStudies.length * 180) / 2 - 80 },
+        data: { isMobile, label: showcase.orchestratorLabel, shippingLabel: showcase.shippingLabel },
       },
-      ...CASE_STUDIES.map((study, idx) => ({
+      ...caseStudies.map((study, idx) => ({
         id: study.id,
         type: 'project',
         position: isMobile
           ? { x: idx % 2 === 0 ? -60 : 60, y: 200 + idx * 220 }
-          : { x: 350 + (idx % 2 === 0 ? 0 : 250), y: idx * 180 },
+          : isRtl
+            ? { x: idx % 2 === 0 ? 0 : 250, y: idx * 180 }
+            : { x: 350 + (idx % 2 === 0 ? 0 : 250), y: idx * 180 },
         data: { ...study, isMobile },
       }))
     ];
 
-    const newEdges = CASE_STUDIES.map((study) => ({
+    const newEdges = caseStudies.map((study) => ({
       id: `e-orch-${study.id}`,
       source: 'orchestrator',
       target: study.id,
@@ -120,14 +148,14 @@ export const Showcase = () => {
 
     setNodes(newNodes);
     setEdges(newEdges);
-  }, [isMobile, setNodes, setEdges]);
+  }, [caseStudies, isMobile, isRtl, setNodes, setEdges, showcase.orchestratorLabel, showcase.shippingLabel]);
 
   return (
     <section id="showcase" ref={ref} className="py-24 px-4 sm:px-6 max-w-7xl mx-auto relative z-10">
-      <div className="reveal mb-12">
-        <h2 className="text-3xl md:text-4xl font-bold text-zinc-100 mb-4 tracking-tight">Selected Projects</h2>
+      <div className="reveal mb-12" style={{ textAlign: 'start' }}>
+        <h2 className="text-3xl md:text-4xl font-bold text-zinc-100 mb-4 tracking-tight">{showcase.title}</h2>
         <p className="text-zinc-400 text-lg max-w-2xl">
-          Click any node for the build details, the live link, and the source.
+          {showcase.description}
         </p>
       </div>
 
@@ -157,9 +185,12 @@ export const Showcase = () => {
         </ReactFlow>
 
         {/* Overlay hint */}
-        <div className="absolute top-4 left-4 bg-zinc-900/90 backdrop-blur-md border border-zinc-800/80 px-3 py-2 rounded-lg text-[10px] sm:text-xs font-mono text-zinc-400 flex items-center gap-2 pointer-events-none z-10 shadow-lg">
+        <div
+          className="absolute top-4 bg-zinc-900/90 backdrop-blur-md border border-zinc-800/80 px-3 py-2 rounded-lg text-[10px] sm:text-xs font-mono text-zinc-400 flex items-center gap-2 pointer-events-none z-10 shadow-lg"
+          style={isRtl ? { right: '1rem' } : { left: '1rem' }}
+        >
           <div className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
-          Pan, zoom, click a node
+          {showcase.hint}
         </div>
       </div>
 
@@ -180,17 +211,18 @@ export const Showcase = () => {
 
               {/* Drawer */}
               <motion.div
-                initial={{ x: '100%' }}
+                initial={{ x: isRtl ? '-100%' : '100%' }}
                 animate={{ x: 0 }}
-                exit={{ x: '100%' }}
+                exit={{ x: isRtl ? '-100%' : '100%' }}
                 transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                className="fixed top-0 right-0 h-full w-full sm:w-[480px] bg-zinc-950 border-l border-zinc-800 shadow-2xl z-[101] flex flex-col"
+                className={`fixed top-0 ${isRtl ? 'left-0 border-r' : 'right-0 border-l'} h-full w-full sm:w-[480px] bg-zinc-950 border-zinc-800 shadow-2xl z-[101] flex flex-col`}
+                dir={direction}
               >
                 {/* Drawer Header */}
                 <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800/80 bg-zinc-900/50 shrink-0">
                   <div className="flex items-center gap-3 text-zinc-100 font-mono text-sm">
                     <Settings2 className="w-5 h-5 text-cyan-500" />
-                    NODE_CONFIGURATION
+                    {showcase.drawerTitle}
                   </div>
                   <button
                     onClick={() => setSelectedStudy(null)}
@@ -201,28 +233,28 @@ export const Showcase = () => {
                 </div>
 
                 {/* Drawer Content (Form-like) */}
-                <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-transparent">
+                <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-transparent" style={{ textAlign: 'start' }}>
 
                   {/* Field: ID & Status */}
                   <div className="flex gap-4">
                     <div className="flex-1 space-y-2">
-                      <label className="text-[10px] font-mono text-zinc-500 uppercase">Node ID</label>
+                      <label className="text-[10px] font-mono text-zinc-500 uppercase">{showcase.fields.nodeId}</label>
                       <div className="bg-zinc-900/50 border border-zinc-800/50 rounded-lg px-3 py-2 text-xs font-mono text-zinc-400">
                         {selectedStudy.id}
                       </div>
                     </div>
                     <div className="flex-1 space-y-2">
-                      <label className="text-[10px] font-mono text-zinc-500 uppercase">Status</label>
+                      <label className="text-[10px] font-mono text-zinc-500 uppercase">{showcase.fields.status}</label>
                       <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-lg px-3 py-2 text-xs font-mono text-cyan-400 flex items-center gap-2">
                         <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                        Deployed
+                        {showcase.fields.deployed}
                       </div>
                     </div>
                   </div>
 
                   {/* Field: Name */}
                   <div className="space-y-2">
-                    <label className="text-[10px] font-mono text-zinc-500 uppercase">Project Name</label>
+                    <label className="text-[10px] font-mono text-zinc-500 uppercase">{showcase.fields.projectName}</label>
                     <div className="bg-zinc-900/80 border border-zinc-800 rounded-lg px-4 py-3 text-sm font-medium text-zinc-200 flex items-center gap-3">
                       {selectedStudy.icon && <selectedStudy.icon className="w-4 h-4 text-cyan-500" />}
                       {selectedStudy.title}
@@ -231,7 +263,7 @@ export const Showcase = () => {
 
                   {/* Field: Description */}
                   <div className="space-y-2">
-                    <label className="text-[10px] font-mono text-zinc-500 uppercase">Description</label>
+                    <label className="text-[10px] font-mono text-zinc-500 uppercase">{showcase.fields.description}</label>
                     <div className="bg-zinc-900/50 border border-zinc-800/50 rounded-lg px-4 py-3 text-sm text-zinc-400 leading-relaxed">
                       {selectedStudy.description}
                     </div>
@@ -240,7 +272,7 @@ export const Showcase = () => {
                   {/* Field: Challenge */}
                   {selectedStudy.details?.challenge && (
                     <div className="space-y-2">
-                      <label className="text-[10px] font-mono text-zinc-500 uppercase">Parameters.Challenge</label>
+                      <label className="text-[10px] font-mono text-zinc-500 uppercase">{showcase.fields.challenge}</label>
                       <div className="bg-zinc-900/50 border border-zinc-800/50 rounded-lg px-4 py-3 text-sm text-zinc-300 leading-relaxed">
                         {selectedStudy.details.challenge}
                       </div>
@@ -250,7 +282,7 @@ export const Showcase = () => {
                   {/* Field: Solution */}
                   {selectedStudy.details?.solution && (
                     <div className="space-y-2">
-                      <label className="text-[10px] font-mono text-cyan-500/70 uppercase">Parameters.Solution</label>
+                      <label className="text-[10px] font-mono text-cyan-500/70 uppercase">{showcase.fields.solution}</label>
                       <div className="bg-cyan-950/10 border border-cyan-900/30 rounded-lg px-4 py-3 text-sm text-zinc-200 leading-relaxed">
                         {selectedStudy.details.solution}
                       </div>
@@ -260,7 +292,7 @@ export const Showcase = () => {
                   {/* Field: Tech Stack */}
                   {selectedStudy.details?.architecture && (
                     <div className="space-y-2">
-                      <label className="text-[10px] font-mono text-zinc-500 uppercase">Dependencies</label>
+                      <label className="text-[10px] font-mono text-zinc-500 uppercase">{showcase.fields.dependencies}</label>
                       <div className="flex flex-wrap gap-2 pt-1">
                         {selectedStudy.details.architecture.map((tech, i) => (
                           <span key={i} className="px-2.5 py-1 bg-zinc-900 border border-zinc-800 text-zinc-400 text-[11px] font-mono rounded-md">
@@ -282,7 +314,7 @@ export const Showcase = () => {
                       className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-cyan-500 hover:bg-cyan-400 text-zinc-950 text-sm font-bold rounded-lg transition-colors"
                     >
                       <Play className="w-4 h-4 fill-zinc-950" />
-                      Open live site
+                      {showcase.actions.liveSite}
                     </a>
                   )}
                   {selectedStudy.details?.githubUrl && (
@@ -293,7 +325,7 @@ export const Showcase = () => {
                       className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-100 text-sm font-medium rounded-lg transition-colors border border-zinc-700"
                     >
                       <Code2 className="w-4 h-4" />
-                      View on GitHub
+                      {showcase.actions.github}
                     </a>
                   )}
                 </div>
