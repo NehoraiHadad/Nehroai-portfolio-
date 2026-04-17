@@ -7,7 +7,7 @@ import { ArrowRight, Terminal, Brain, Network, Database, Cpu, Sparkles } from 'l
 import { OpenAILogo, AnthropicLogo, GeminiLogo, N8nLogo, MetaLogo, PythonLogo, VercelLogo, DockerLogo, HuggingFaceLogo } from './TechLogos';
 import { InteractiveAgent } from './InteractiveAgent';
 
-const CYCLING_WORDS = ['Agents.', 'Pipelines.', 'Interfaces.', 'Systems.'];
+const CYCLING_WORDS = ['Agents.', 'Workflows.', 'Interfaces.', 'Systems.'];
 const SCRAMBLE_CHARS = 'abcdefghijklmnopqrstuvwxyz0123456789!<>-_\\/[]{}cxz=+*^?#';
 
 const ScrambleText = () => {
@@ -540,7 +540,7 @@ export const Hero = () => (
       
       <div className="text-5xl md:text-7xl font-bold text-zinc-100 mb-6 tracking-tight leading-tight">
         <motion.div variants={wordVariants} initial="hidden" animate="show" className="inline-block overflow-hidden pb-2">
-          {"Architecting".split('').map((char, i) => (
+          {"Engineering".split('').map((char, i) => (
             <motion.span key={i} variants={charVariants} className="inline-block">
               {char}
             </motion.span>
@@ -553,7 +553,7 @@ export const Hero = () => (
       </div>
       
       <motion.h2 variants={item} className="text-xl md:text-2xl text-zinc-400 mb-6 font-light leading-relaxed">
-        AI engineer with infrastructure depth. I build agents, pipelines, and full-stack web systems — from on-prem roots to AWS-native deployments.
+        AI engineer with infrastructure depth. I build agents, workflows, and full-stack web systems.
       </motion.h2>
 
       <motion.p variants={item} className="text-lg text-zinc-500 max-w-xl mb-10">
