@@ -218,6 +218,8 @@ export const enDictionary: AppDictionary = {
           'Tailwind CSS 4 + shadcn/ui',
           'Vitest + Playwright',
         ],
+        liveUrl: 'https://storycreator-ai.vercel.app',
+        githubUrl: 'https://github.com/NehoraiHadad/story-creator',
       },
     },
     {
