@@ -46,7 +46,7 @@ export interface AppDictionary {
   };
   hero: {
     rotatingWords: string[];
-    statusLabel: string;
+    statusLabels: string[];
     titlePrefix: string;
     subtitle: string;
     primaryCta: string;

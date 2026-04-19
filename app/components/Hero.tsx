@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { motion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import { ArrowLeft, ArrowRight, FileText, Brain, Network, Database, Cpu, Sparkles } from 'lucide-react';
 import { OpenAILogo, AnthropicLogo, GeminiLogo, N8nLogo, MetaLogo, PythonLogo, VercelLogo, DockerLogo, HuggingFaceLogo } from './TechLogos';
 import { InteractiveAgent } from './InteractiveAgent';
@@ -72,6 +72,45 @@ const ScrambleText = ({ words, isRtl }: { words: string[]; isRtl: boolean }) => 
       >
         {text}
       </span>
+    </span>
+  );
+};
+
+const HeroStatusLabel = ({ labels }: { labels: string[] }) => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const longestLabel = labels.reduce((longest, label) => (
+    label.length > longest.length ? label : longest
+  ), labels[0] ?? '');
+
+  useEffect(() => {
+    if (labels.length < 2) {
+      return;
+    }
+
+    const rotationTimer = setInterval(() => {
+      setActiveIndex((currentIndex) => (currentIndex + 1) % labels.length);
+    }, 3000);
+
+    return () => clearInterval(rotationTimer);
+  }, [labels]);
+
+  const activeLabel = labels[activeIndex % labels.length] ?? longestLabel;
+
+  return (
+    <span className="relative inline-grid items-center whitespace-nowrap">
+      <span className="invisible col-start-1 row-start-1">{longestLabel}</span>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.span
+          key={activeLabel}
+          initial={{ opacity: 0, y: 2, filter: 'blur(4px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          exit={{ opacity: 0, y: -2, filter: 'blur(4px)' }}
+          transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+          className="col-start-1 row-start-1"
+        >
+          {activeLabel}
+        </motion.span>
+      </AnimatePresence>
     </span>
   );
 };
@@ -561,7 +600,7 @@ export const Hero = () => {
         <motion.div variants={item} className="flex items-center gap-2 mb-6 bg-zinc-900/50 border border-zinc-800 px-3 py-1.5 rounded-full">
           <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
           <span className="text-cyan-400 text-[10px] font-mono font-bold tracking-[0.2em] uppercase">
-            {hero.statusLabel}
+            <HeroStatusLabel labels={hero.statusLabels} />
           </span>
         </motion.div>
         

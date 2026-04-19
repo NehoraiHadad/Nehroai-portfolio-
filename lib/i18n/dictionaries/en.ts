@@ -20,7 +20,7 @@ export const enDictionary: AppDictionary = {
   },
   hero: {
     rotatingWords: ['Agents.', 'Workflows.', 'Interfaces.', 'Systems.'],
-    statusLabel: 'System.Status: Online',
+    statusLabels: ['Open to Work', 'Available for Projects'],
     titlePrefix: 'Engineering',
     subtitle: 'AI engineer with infrastructure depth. I build agents, workflows, and full-stack web systems.',
     primaryCta: 'See what I ship',

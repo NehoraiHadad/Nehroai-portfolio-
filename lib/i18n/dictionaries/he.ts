@@ -20,7 +20,7 @@ export const heDictionary: AppDictionary = {
   },
   hero: {
     rotatingWords: ['סוכנים.', 'תהליכי עבודה.', 'ממשקים.', 'מערכות.'],
-    statusLabel: 'System.Status: מקוון',
+    statusLabels: ['זמין לעבודה', 'זמין לפרויקטים'],
     titlePrefix: 'בונה',
     subtitle: 'מפתח Full-Stack עם התמחות ב-AI. אני בונה agents, workflows ומערכות web.',
     primaryCta: 'לראות מה בניתי',
