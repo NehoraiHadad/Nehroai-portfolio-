@@ -107,6 +107,13 @@ export const Showcase = () => {
       })),
     [rawCaseStudies]
   );
+  const flowHeight = useMemo(() => {
+    if (isMobile) {
+      return Math.max(760, 220 + caseStudies.length * 170);
+    }
+
+    return Math.max(680, 220 + caseStudies.length * 140);
+  }, [caseStudies.length, isMobile]);
 
   useEffect(() => {
     const checkMobile = () => {
@@ -120,19 +127,24 @@ export const Showcase = () => {
   }, []);
 
   useEffect(() => {
+    const projectStartY = isMobile ? 170 : 30;
+    const projectGap = isMobile ? 180 : 150;
+    const orchestratorY = isMobile
+      ? 0
+      : projectStartY + ((caseStudies.length - 1) * projectGap) / 2 - 40;
     const newNodes = [
       {
         id: 'orchestrator',
         type: 'orchestrator',
-        position: isMobile ? { x: 0, y: 0 } : { x: 0, y: (caseStudies.length * 180) / 2 - 80 },
+        position: isMobile ? { x: 0, y: 0 } : { x: 0, y: orchestratorY },
         data: { isMobile, label: showcase.orchestratorLabel, shippingLabel: showcase.shippingLabel },
       },
       ...caseStudies.map((study, idx) => ({
         id: study.id,
         type: 'project',
         position: isMobile
-          ? { x: idx % 2 === 0 ? -60 : 60, y: 200 + idx * 220 }
-          : { x: 350 + (idx % 2 === 0 ? 0 : 250), y: idx * 180 },
+          ? { x: 0, y: projectStartY + idx * projectGap }
+          : { x: idx % 2 === 0 ? 360 : 610, y: projectStartY + idx * projectGap },
         data: { ...study, isMobile, isRtl },
       }))
     ];
@@ -163,8 +175,8 @@ export const Showcase = () => {
       </div>
 
       <div
-        className="reveal w-full h-[600px] sm:h-[650px] bg-zinc-950 border border-zinc-800/80 rounded-2xl overflow-hidden relative shadow-2xl"
-        style={{ '--reveal-delay': '200ms' } as React.CSSProperties}
+        className="reveal w-full bg-zinc-950 border border-zinc-800/80 rounded-2xl overflow-hidden relative shadow-2xl"
+        style={{ '--reveal-delay': '200ms', height: `${flowHeight}px` } as React.CSSProperties}
       >
         <ReactFlow
           nodes={nodes}
@@ -178,9 +190,16 @@ export const Showcase = () => {
             }
           }}
           fitView
-          fitViewOptions={{ padding: isMobile ? 0.3 : 0.1 }}
+          fitViewOptions={{ padding: isMobile ? 0.18 : 0.12 }}
           minZoom={0.2}
           maxZoom={1.5}
+          zoomOnScroll={false}
+          zoomOnPinch={false}
+          zoomOnDoubleClick={false}
+          preventScrolling={false}
+          panOnDrag={false}
+          nodesDraggable={false}
+          elementsSelectable={false}
           className="bg-zinc-950/50"
           proOptions={{ hideAttribution: true }}
         >

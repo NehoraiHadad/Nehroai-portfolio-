@@ -32,7 +32,7 @@ export const enDictionary: AppDictionary = {
   showcase: {
     title: 'Selected Projects',
     description: 'Click any node for the build details, the live link, and the source.',
-    hint: 'Pan, zoom, click a node',
+    hint: 'Click a node to open the project details',
     orchestratorLabel: 'Nehorai // Builder',
     shippingLabel: 'SHIPPING',
     drawerTitle: 'NODE_CONFIGURATION',

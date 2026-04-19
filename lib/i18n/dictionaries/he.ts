@@ -32,7 +32,7 @@ export const heDictionary: AppDictionary = {
   showcase: {
     title: 'פרויקטים נבחרים',
     description: 'לחץ על כל node כדי לראות את פרטי המימוש, הקישור החי וקוד המקור.',
-    hint: 'גרור, בצע זום, ולחץ על node',
+    hint: 'לחץ על node כדי לפתוח את פרטי הפרויקט',
     orchestratorLabel: 'Nehorai // Builder',
     shippingLabel: 'באוויר',
     drawerTitle: 'תצורת Node',
