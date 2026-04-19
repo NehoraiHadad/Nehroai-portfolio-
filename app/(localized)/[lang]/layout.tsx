@@ -5,6 +5,7 @@ import { getLocaleDirection, isLocale, locales } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { I18nProvider } from '@/lib/i18n/provider';
 import { fontVariables } from '@/lib/fonts';
+import { getAbsoluteUrl, siteOwnerName, siteUrl } from '@/lib/site-metadata';
 
 export async function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
@@ -20,15 +21,32 @@ export async function generateMetadata({
   }
 
   const dictionary = await getDictionary(lang);
+  const pathname = `/${lang}`;
 
   return {
+    metadataBase: new URL(siteUrl),
+    applicationName: siteOwnerName,
     title: dictionary.meta.title,
     description: dictionary.meta.description,
     alternates: {
+      canonical: pathname,
       languages: {
         en: '/en',
         he: '/he',
       },
+    },
+    openGraph: {
+      type: 'website',
+      siteName: siteOwnerName,
+      url: getAbsoluteUrl(pathname),
+      title: dictionary.meta.title,
+      description: dictionary.meta.description,
+      locale: lang === 'he' ? 'he_IL' : 'en_US',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: dictionary.meta.title,
+      description: dictionary.meta.description,
     },
   };
 }
