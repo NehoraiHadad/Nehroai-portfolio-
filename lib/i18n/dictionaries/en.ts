@@ -23,7 +23,7 @@ export const enDictionary: AppDictionary = {
     statusLabels: ['Open to Work', 'Available for Projects'],
     titlePrefix: 'Engineering',
     subtitle: 'AI engineer with infrastructure depth. I build agents, workflows, and full-stack web systems.',
-    primaryCta: 'See what I ship',
+    primaryCta: "See what I've built",
     secondaryCta: 'Download Resume',
   },
   practice: {
