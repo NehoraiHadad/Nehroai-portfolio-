@@ -16,11 +16,14 @@ export const ThePractice = () => {
     <section
       id="practice"
       ref={ref}
-      className="py-24 px-6 relative z-10 border-y border-zinc-800/50 bg-zinc-900/20 backdrop-blur-sm"
+      className="py-24 px-6 relative z-10 border-y border-line bg-[var(--bg-1)]/30"
     >
       <div className="max-w-6xl mx-auto">
         <div className="reveal mb-16" style={{ textAlign: isRtl ? 'start' : 'center' }}>
-          <h2 className="text-3xl md:text-4xl font-bold text-zinc-100 mb-4 tracking-tight">
+          <span className="section-marker mb-4" style={{ justifyContent: isRtl ? 'flex-start' : 'center' }} dir="ltr">
+            01 — STACK
+          </span>
+          <h2 className="text-3xl md:text-4xl font-extrabold text-fg-0 mt-4 tracking-tight">
             {practice.title}
           </h2>
         </div>
@@ -29,23 +32,23 @@ export const ThePractice = () => {
           {skills.map((skillGroup, idx) => (
             <motion.div
               key={idx}
-              className="reveal bg-zinc-950/80 backdrop-blur-md border border-zinc-800/80 rounded-2xl p-6 shadow-xl transition-colors duration-300"
+              className="reveal card p-6 transition-colors duration-200"
               style={{ '--reveal-delay': `${idx * 100}ms` } as React.CSSProperties}
-              whileHover={{ y: -5, borderColor: 'rgba(6, 182, 212, 0.5)' }}
+              whileHover={{ y: -4, borderColor: 'var(--accent)' }}
               dir={isRtl ? 'ltr' : undefined}
             >
-              <h3 className="text-zinc-100 font-semibold mb-4 flex items-center gap-2 bidi-ltr" style={{ textAlign: 'left' }}>
-                <Layers className="w-4 h-4 text-cyan-400 shrink-0" />
+              <h3 className="text-fg-0 text-base font-semibold mb-4 flex items-center gap-2 bidi-ltr" style={{ textAlign: 'left' }}>
+                <Layers className="w-4 h-4 text-accent shrink-0" strokeWidth={1.5} />
                 {skillGroup.category}
               </h3>
               <ul className="space-y-3">
                 {skillGroup.items.map((item, i) => (
                   <li
                     key={i}
-                    className="text-zinc-400 text-sm flex items-start gap-2 font-mono bidi-ltr"
+                    className="text-fg-1 text-sm flex items-start gap-2 font-mono bidi-ltr"
                     style={{ textAlign: 'left' }}
                   >
-                    <span className="text-cyan-500/50 mt-0.5 shrink-0" aria-hidden="true">•</span>
+                    <span className="text-accent mt-0.5 shrink-0" aria-hidden="true">·</span>
                     <span>{item}</span>
                   </li>
                 ))}

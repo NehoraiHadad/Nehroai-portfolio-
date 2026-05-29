@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Briefcase, Menu, X } from 'lucide-react';
 import { locales } from '@/lib/i18n/config';
 import { useDictionary, useLocale } from '@/lib/i18n/provider';
+import { ThemeToggle } from './ThemeToggle';
 
 export const TopNav = ({ mobileMenuOpen, setMobileMenuOpen }: { mobileMenuOpen: boolean, setMobileMenuOpen: (v: boolean) => void }) => {
   const [dotIgnited, setDotIgnited] = useState(false);
@@ -28,7 +29,7 @@ export const TopNav = ({ mobileMenuOpen, setMobileMenuOpen }: { mobileMenuOpen: 
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: "spring", stiffness: 100, damping: 20 }}
-      className="fixed top-0 w-full z-50 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800/50"
+      className="fixed top-0 w-full z-50 bg-[color-mix(in_oklab,var(--bg-0)_70%,transparent)] backdrop-blur-[12px] border-b border-line"
     >
       <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
         {/* Logo Area */}
@@ -37,7 +38,7 @@ export const TopNav = ({ mobileMenuOpen, setMobileMenuOpen }: { mobileMenuOpen: 
             href="#"
             aria-label="Nehorai"
             dir="ltr"
-            className="text-2xl font-bold tracking-tighter text-zinc-100 relative group inline-block w-max bidi-ltr"
+            className="text-2xl font-bold tracking-tighter text-fg-0 relative group inline-block w-max bidi-ltr"
           >
             <span aria-hidden="true">
               Nehor
@@ -55,52 +56,56 @@ export const TopNav = ({ mobileMenuOpen, setMobileMenuOpen }: { mobileMenuOpen: 
               </span>
             </span>
           </a>
-          <span className="text-[10px] text-zinc-500 tracking-widest uppercase mt-0.5 hidden sm:block">
+          <span className="font-mono text-[10px] text-fg-2 tracking-[0.16em] uppercase mt-0.5 hidden sm:block">
             {navigation.eyebrow}
           </span>
         </div>
 
         {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-6">
           {[
             { href: '#practice', label: navigation.links.practice },
             { href: '#showcase', label: navigation.links.showcase },
           ].map((item) => (
-            <a key={item.href} href={item.href} className="text-sm font-medium text-zinc-400 hover:text-cyan-400 transition-colors">
+            <a key={item.href} href={item.href} className="text-sm font-medium text-fg-1 hover:text-accent transition-colors">
               {item.label}
             </a>
           ))}
-          <div className="flex items-center gap-1 rounded-full border border-zinc-800 bg-zinc-900/70 p-1">
+          <div className="flex items-center gap-1 rounded-full border border-line bg-surface p-1">
             {locales.map((nextLocale) => (
               <Link
                 key={nextLocale}
                 href={`/${nextLocale}`}
                 className={`min-w-10 rounded-full px-3 py-1 text-center text-xs font-semibold transition-colors ${
-                  locale === nextLocale ? 'bg-zinc-100 text-zinc-950' : 'text-zinc-400 hover:text-zinc-100'
+                  locale === nextLocale ? 'bg-accent text-[var(--fg-on-accent)]' : 'text-fg-2 hover:text-fg-0'
                 }`}
               >
                 {localeLabels[nextLocale]}
               </Link>
             ))}
           </div>
-          <motion.a 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            href="#dossier" 
-            className="bg-zinc-100 text-zinc-950 px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-white transition-colors flex items-center gap-2 shadow-sm"
+          <ThemeToggle />
+          <motion.a
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.97 }}
+            href="#dossier"
+            className="btn btn-primary btn-sm"
           >
-            <Briefcase className="w-4 h-4 shrink-0" />
+            <Briefcase className="w-4 h-4 shrink-0" strokeWidth={1.5} />
             {navigation.contactCta}
           </motion.a>
         </div>
 
         {/* Mobile Toggle */}
-        <button 
-          className="md:hidden text-zinc-400 hover:text-zinc-100 transition-colors"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          {mobileMenuOpen ? <X /> : <Menu />}
-        </button>
+        <div className="md:hidden flex items-center gap-2">
+          <ThemeToggle />
+          <button
+            className="text-fg-1 hover:text-fg-0 transition-colors"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? <X /> : <Menu />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -110,7 +115,7 @@ export const TopNav = ({ mobileMenuOpen, setMobileMenuOpen }: { mobileMenuOpen: 
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="md:hidden bg-zinc-950 border-b border-zinc-800 overflow-hidden"
+            className="md:hidden bg-page border-b border-line overflow-hidden"
           >
             <div className="flex flex-col px-6 py-4 gap-4">
               <div className="flex items-center gap-2">
@@ -121,17 +126,17 @@ export const TopNav = ({ mobileMenuOpen, setMobileMenuOpen }: { mobileMenuOpen: 
                     onClick={() => setMobileMenuOpen(false)}
                     className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
                       locale === nextLocale
-                        ? 'border-zinc-100 bg-zinc-100 text-zinc-950'
-                        : 'border-zinc-800 bg-zinc-900/70 text-zinc-400 hover:text-zinc-100'
+                        ? 'border-accent bg-accent text-[var(--fg-on-accent)]'
+                        : 'border-line bg-surface text-fg-2 hover:text-fg-0'
                     }`}
                   >
                     {localeLabels[nextLocale]}
                   </Link>
                 ))}
               </div>
-              <a href="#practice" onClick={() => setMobileMenuOpen(false)} className="text-zinc-400 hover:text-cyan-400 font-medium transition-colors">{navigation.links.practice}</a>
-              <a href="#showcase" onClick={() => setMobileMenuOpen(false)} className="text-zinc-400 hover:text-cyan-400 font-medium transition-colors">{navigation.links.showcase}</a>
-              <a href="#dossier" onClick={() => setMobileMenuOpen(false)} className="bg-zinc-100 text-zinc-950 px-4 py-2 rounded-lg text-sm font-semibold text-center mt-2">
+              <a href="#practice" onClick={() => setMobileMenuOpen(false)} className="text-fg-1 hover:text-accent font-medium transition-colors">{navigation.links.practice}</a>
+              <a href="#showcase" onClick={() => setMobileMenuOpen(false)} className="text-fg-1 hover:text-accent font-medium transition-colors">{navigation.links.showcase}</a>
+              <a href="#dossier" onClick={() => setMobileMenuOpen(false)} className="btn btn-primary mt-2">
                 {navigation.contactCta}
               </a>
             </div>

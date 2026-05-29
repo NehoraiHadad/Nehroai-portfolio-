@@ -1,24 +1,33 @@
-import { Assistant, Inter, Space_Grotesk } from 'next/font/google';
+import { Geist, Geist_Mono, Rubik } from 'next/font/google';
 
-export const appSans = Inter({
+// Geist (Vercel, OFL) — sans + display. Variable font, full 100–900 weight axis,
+// so we don't pin weights. Display uses the 800/900 end via CSS.
+export const appSans = Geist({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-geist',
   fallback: ['system-ui', 'Arial', 'sans-serif'],
 });
 
-export const appDisplay = Space_Grotesk({
+// Display reuses Geist (heavy weights) — kept as a separate export so the
+// `--font-geist-display` variable / mapping stays explicit and swappable.
+export const appDisplay = appSans;
+
+// Geist Mono — labels, system lines, code, numeric data.
+export const appMono = Geist_Mono({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-space-grotesk',
-  fallback: ['system-ui', 'Arial', 'sans-serif'],
+  variable: '--font-geist-mono',
+  fallback: ['SF Mono', 'Menlo', 'ui-monospace', 'monospace'],
 });
 
-export const appHebrew = Assistant({
+// Rubik (OFL) — covers Hebrew + Latin in one family; the documented Hebrew
+// display pair (Rubik Black). Variable font, so no weight pinning.
+export const appHebrew = Rubik({
   subsets: ['hebrew', 'latin'],
   display: 'swap',
-  variable: '--font-hebrew',
+  variable: '--font-rubik',
   fallback: ['Arial', 'system-ui', 'sans-serif'],
 });
 
-export const fontVariables = `${appSans.variable} ${appDisplay.variable} ${appHebrew.variable}`;
+export const fontVariables = `${appSans.variable} ${appMono.variable} ${appHebrew.variable}`;
