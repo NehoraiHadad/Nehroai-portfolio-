@@ -1,228 +1,479 @@
 @import "tailwindcss";
 
-@theme {
-  --font-sans: var(--font-ui-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-ui-display), ui-sans-serif, system-ui, sans-serif;
+/* ============================================================
+   Nehorai — Design Tokens (ported from the design-system bundle
+   colors_and_type.css). Palette derived from the LinkedIn cover:
+   deep navy → electric blue → pale ice-blue highlights.
+   Fonts are wired to the next/font variables (lib/fonts.ts):
+     --font-geist, --font-geist-mono, --font-rubik
+   ============================================================ */
+:root {
+  /* Surface ramp — deep navy */
+  --bg-0: #050E22;        /* page */
+  --bg-1: #0A1735;        /* card / panel */
+  --bg-2: #132348;        /* raised / hover */
+  --bg-3: #1B2F5C;        /* press / active */
+  --bg-elev: #16264F;     /* floating panels */
 
-  --color-obsidian: #131313;
-  --color-electric: #00D1FF;
-  --color-gold: #FFD59C;
-  --color-slate-dark: #2A2A2A;
-  --color-glass: rgba(255, 255, 255, 0.03);
-  --color-glass-border: rgba(255, 255, 255, 0.08);
+  /* Hairlines */
+  --line: #1A2A55;
+  --line-strong: #2A3D78;
 
-  --animate-scanline: scanline 8s linear infinite;
-  --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
+  /* Foreground — cool whites */
+  --fg-0: #EEF2FB;        /* primary text */
+  --fg-1: #9CA9C8;        /* body */
+  --fg-2: #5F6B8A;        /* labels, hints */
+  --fg-3: #3B4566;        /* decorative only (~2.3:1 on bg-0) — never legible copy */
+  --fg-placeholder: var(--fg-2);
+  --fg-inverse: #050E22;  /* on LIGHT fills (--soft, --accent-ice) — NOT on --accent */
+  --fg-on-accent: var(--fg-0); /* on saturated --accent fills (CTA); 5.4:1 */
 
-  @keyframes scanline {
-    0% { transform: translateY(-100%); }
-    100% { transform: translateY(100%); }
-  }
+  /* Brand — electric / wave blues */
+  --accent: #2563EB;
+  --accent-hover: #3B82F6;
+  --accent-press: #1D4ED8;
+  --accent-dim: #1E3A8A;
+  --accent-faint: color-mix(in oklab, var(--accent) 10%, transparent);
+  --accent-pale: #60A5FA;
+  --accent-ice: #BAEFFE;
 
-  @keyframes pulse-glow {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 0.6; }
-  }
+  /* Signal — network glow */
+  --signal: #7DD3FC;
+  --signal-bright: #BAEFFE;
+  --signal-dim: #1E3A56;
+
+  /* Soft — avatar backdrop */
+  --soft: #D1D8F2;
+  --soft-dim: #596780;
+
+  /* Semantic */
+  --ok: #34D399;
+  --ok-dim: #134E4A;
+  --warn: #FBBF24;
+  --danger: #F87171;
+  --danger-dim: #4C1D1D;
+
+  /* Status */
+  --status-available: var(--ok);
+  --status-busy: var(--warn);
+  --status-off: var(--fg-3);
+
+  /* Semantic aliases */
+  --color-page: var(--bg-0);
+  --color-surface: var(--bg-1);
+  --color-surface-raised: var(--bg-2);
+  --color-text: var(--fg-0);
+  --color-text-muted: var(--fg-1);
+  --color-text-dim: var(--fg-2);
+  --color-border: var(--line);
+  --color-border-strong: var(--line-strong);
+  --color-link: var(--accent);
+  --color-focus: var(--accent);
+
+  /* Type families (wired to next/font) */
+  --font-mono: var(--font-geist-mono), 'SF Mono', 'Menlo', ui-monospace, monospace;
+  --font-sans: var(--font-geist), system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans-he: var(--font-rubik), var(--font-geist), system-ui, sans-serif;
+  --font-serif: Georgia, 'Times New Roman', serif;
+  --font-display: var(--font-geist), system-ui, sans-serif;
+  --font-display-he: var(--font-rubik), var(--font-geist), system-ui, sans-serif;
+
+  /* Type scale */
+  --t-12: 0.75rem;  --t-14: 0.875rem; --t-16: 1rem;     --t-18: 1.125rem;
+  --t-20: 1.25rem;  --t-24: 1.5rem;   --t-30: 1.875rem; --t-36: 2.25rem;
+  --t-48: 3rem;     --t-64: 4rem;     --t-80: 5rem;     --t-96: 6rem; --t-144: 9rem;
+
+  --lh-tight: 1.05; --lh-snug: 1.2; --lh-normal: 1.5; --lh-loose: 1.75;
+
+  --ls-display: -0.02em;
+  --ls-display-tight: -0.04em;
+  --ls-tight: -0.01em;
+  --ls-normal: 0;
+  --ls-wide: 0.04em;
+  --ls-wider: 0.08em;
+  --ls-widest: 0.16em;
+
+  --fw-regular: 400; --fw-medium: 500; --fw-semibold: 600;
+  --fw-bold: 700; --fw-extrabold: 800; --fw-black: 900;
+
+  /* Spacing (8-pt) */
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 20px;
+  --s-6: 24px; --s-7: 32px; --s-8: 40px; --s-9: 56px; --s-10: 72px;
+  --s-11: 96px; --s-12: 128px; --s-8b: 48px;
+
+  /* Radius */
+  --r-0: 0px; --r-1: 6px; --r-2: 12px; --r-pill: 9999px;
+
+  /* Shadows / glows */
+  --shadow-1: inset 0 1px 0 rgba(255,255,255,0.04);
+  --shadow-2: 0 8px 24px -12px rgba(0,0,0,0.6);
+  --shadow-3: 0 16px 48px -16px rgba(0,0,0,0.8);
+  --shadow-glow: 0 0 0 1px var(--accent), 0 0 24px -8px var(--accent);
+  --shadow-glow-soft: 0 0 32px -8px rgba(37, 99, 235, 0.4);
+  --shadow-glow-ice: 0 0 24px -8px var(--accent-ice);
+  --shadow-focus-ring: 0 0 0 2px var(--bg-0), 0 0 0 4px var(--accent);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in:  cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-linear: linear;
+  --dur-0: 80ms; --dur-1: 120ms; --dur-2: 200ms; --dur-3: 480ms; --dur-4: 960ms;
+
+  /* Layout */
+  --page-max: 1280px; --read-max: 64ch; --header-h: 64px;
+  --bp-sm: 580px; --bp-md: 720px; --bp-lg: 980px; --bp-xl: 1240px;
+  --z-base: 1; --z-sticky: 50; --z-overlay: 100; --z-modal: 200; --z-toast: 300;
+
+  /* Motifs */
+  --grid-color: rgba(123, 178, 255, 0.06);
+  --grid-size: 32px;
+  --scanline-opacity: 0.03;
 }
 
+/* ============================================================
+   LIGHT THEME — "blueprint paper". Opt-in via <html data-theme="light">.
+   ============================================================ */
+:root[data-theme="light"] {
+  --bg-0: #F4F6FB; --bg-1: #FFFFFF; --bg-2: #EAEEF7; --bg-3: #DEE4F1; --bg-elev: #FFFFFF;
+  --line: #D8DEEC; --line-strong: #B8C2D9;
+  --fg-0: #050E22; --fg-1: #2A3958; --fg-2: #5F6B8A; --fg-3: #8893B0;
+  --fg-placeholder: var(--fg-2);
+  --fg-inverse: #FFFFFF; --fg-on-accent: #FFFFFF;
+  --accent: #2563EB; --accent-hover: #1D4ED8; --accent-press: #1E40AF;
+  --accent-dim: #DBEAFE; --accent-faint: color-mix(in oklab, var(--accent) 8%, transparent);
+  --accent-pale: #3B82F6; --accent-ice: #1E3A8A;
+  --signal: #0284C7; --signal-bright: #0369A1; --signal-dim: #BAE6FD;
+  --soft: #1B2F5C; --soft-dim: #E2E8F0;
+  --ok: #059669; --ok-dim: #D1FAE5; --warn: #D97706; --danger: #DC2626; --danger-dim: #FEE2E2;
+  --shadow-1: inset 0 1px 0 rgba(255,255,255,0.6);
+  --shadow-2: 0 8px 24px -12px rgba(15,23,42,0.16);
+  --shadow-3: 0 16px 48px -16px rgba(15,23,42,0.22);
+  --shadow-glow-soft: 0 0 32px -8px rgba(37, 99, 235, 0.3);
+  --shadow-glow-ice: 0 0 24px -8px rgba(37, 99, 235, 0.5);
+  --grid-color: rgba(37, 99, 235, 0.08);
+  --scanline-opacity: 0.04;
+  color-scheme: light;
+}
+
+/* ============================================================
+   Tailwind v4 theme mapping — utilities reference the runtime
+   vars (via @theme inline) so colors flip with the theme.
+   ============================================================ */
+@theme inline {
+  --font-sans: var(--font-geist), system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-geist), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  --color-page: var(--bg-0);
+  --color-surface: var(--bg-1);
+  --color-surface-raised: var(--bg-2);
+  --color-surface-active: var(--bg-3);
+  --color-elev: var(--bg-elev);
+
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+
+  --color-fg-0: var(--fg-0);
+  --color-fg-1: var(--fg-1);
+  --color-fg-2: var(--fg-2);
+  --color-fg-3: var(--fg-3);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-press: var(--accent-press);
+  --color-accent-dim: var(--accent-dim);
+  --color-accent-pale: var(--accent-pale);
+  --color-accent-ice: var(--accent-ice);
+
+  --color-signal: var(--signal);
+  --color-signal-bright: var(--signal-bright);
+  --color-signal-dim: var(--signal-dim);
+
+  --color-soft: var(--soft);
+  --color-soft-dim: var(--soft-dim);
+
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-danger: var(--danger);
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
 @layer base {
   html {
-    --font-ui-sans: var(--font-inter);
-    --font-ui-display: var(--font-space-grotesk);
+    color-scheme: dark;
+    background: var(--color-page);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: var(--lh-normal);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  html:lang(he), html[dir="rtl"], [dir="rtl"] {
+    font-family: var(--font-sans-he);
   }
 
-  html:lang(he) {
-    --font-ui-sans: var(--font-hebrew);
-    --font-ui-display: var(--font-hebrew);
+  /* Hebrew display override — reach elements that set their own font-family */
+  html:lang(he) h1, html:lang(he) .h1,
+  html:lang(he) h2, html:lang(he) .h2,
+  html:lang(he) h3, html:lang(he) .h3,
+  html:lang(he) h4, html:lang(he) .h4,
+  html:lang(he) .display, html:lang(he) .hero-title,
+  [dir="rtl"] h1, [dir="rtl"] .h1,
+  [dir="rtl"] h2, [dir="rtl"] .h2,
+  [dir="rtl"] h3, [dir="rtl"] .h3,
+  [dir="rtl"] h4, [dir="rtl"] .h4,
+  [dir="rtl"] .display, [dir="rtl"] .hero-title {
+    font-family: var(--font-display-he);
+    letter-spacing: -0.02em;
   }
 
   body {
-    @apply bg-obsidian text-white/90 font-sans selection:bg-electric/30 selection:text-white;
+    margin: 0;
+    background: var(--color-page);
+    color: var(--color-text);
+    min-height: 100vh;
     overflow-x: hidden;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
+    @apply font-sans selection:bg-accent selection:text-[var(--fg-inverse)];
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-display tracking-tight;
+  h1, .h1 {
+    font-family: var(--font-display); font-size: var(--t-48); font-weight: var(--fw-black);
+    letter-spacing: var(--ls-display-tight); line-height: var(--lh-tight);
+    margin: 0 0 var(--s-6); color: var(--fg-0); text-wrap: balance;
   }
-
-  :lang(he) h1,
-  :lang(he) h2,
-  :lang(he) h3,
-  :lang(he) h4,
-  :lang(he) h5,
-  :lang(he) h6 {
+  h2, .h2 {
+    font-family: var(--font-display); font-size: var(--t-36); font-weight: var(--fw-extrabold);
+    letter-spacing: -0.02em; line-height: var(--lh-snug);
+    margin: 0 0 var(--s-5); color: var(--fg-0); text-wrap: balance;
+  }
+  h3, .h3 {
+    font-family: var(--font-sans); font-size: var(--t-24); font-weight: var(--fw-bold);
+    letter-spacing: -0.01em; line-height: var(--lh-snug); margin: 0 0 var(--s-4); color: var(--fg-0);
+  }
+  h4, .h4 {
+    font-family: var(--font-sans); font-size: var(--t-18); font-weight: var(--fw-semibold);
+    line-height: var(--lh-snug); margin: 0 0 var(--s-3); color: var(--fg-0);
+  }
+  /* Hebrew headings keep their own metrics; reset Latin negative tracking */
+  :lang(he) h1, :lang(he) h2, :lang(he) h3, :lang(he) h4, :lang(he) h5, :lang(he) h6 {
     letter-spacing: normal;
   }
+
+  .display, .hero-title {
+    font-family: var(--font-display); font-size: clamp(var(--t-48), 11vw, 144px);
+    font-weight: var(--fw-black); letter-spacing: var(--ls-display-tight); line-height: 0.95;
+    color: var(--fg-0); text-wrap: balance;
+  }
+
+  /* Tabular numerals — metrics, latency, throughput */
+  .nums, .tabular { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+
+  .lead { font-size: var(--t-20); line-height: var(--lh-normal); color: var(--fg-0); }
+
+  code, kbd, samp, pre, .mono { font-family: var(--font-mono); font-size: 0.92em; }
+
+  :focus { outline: none; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--r-1); }
 }
 
+/* ============================================================
+   COMPONENTS — hairlines, not glass. Recipes from the bundle's
+   primitives.jsx + preview/components-*.html.
+   ============================================================ */
 @layer components {
-  .glass-card {
-    @apply bg-glass border border-glass-border backdrop-blur-md rounded-2xl;
+  /* Card — surface + hairline, tight radius, no glass */
+  .card {
+    background: var(--bg-1);
+    border: 1px solid var(--line);
+    border-radius: var(--r-2);
   }
 
-  .bento-grid {
-    @apply grid grid-cols-1 md:grid-cols-12 gap-4 auto-rows-[minmax(180px,auto)];
+  /* Eyebrow / mono uppercase label */
+  .eyebrow {
+    font-family: var(--font-mono); font-size: var(--t-12); font-weight: var(--fw-medium);
+    letter-spacing: var(--ls-widest); text-transform: uppercase; color: var(--fg-2);
   }
 
-  .btn-primary {
-    @apply px-6 py-3 bg-electric text-obsidian font-display font-bold rounded-full 
-           hover:scale-105 active:scale-95 transition-all duration-300 
-           shadow-[0_0_20px_rgba(0,209,255,0.3)] hover:shadow-[0_0_30px_rgba(0,209,255,0.5)];
+  /* Section marker — "04 — CONTACT" on the left rail */
+  .section-marker {
+    font-family: var(--font-mono); font-size: var(--t-12); font-weight: var(--fw-medium);
+    letter-spacing: var(--ls-widest); color: var(--fg-2); text-transform: uppercase;
+    display: inline-flex; align-items: center; gap: var(--s-2);
+  }
+  .section-marker::before {
+    content: ""; width: 24px; height: 1px; background: var(--line-strong); display: inline-block;
   }
 
-  .btn-secondary {
-    @apply px-6 py-3 border border-glass-border bg-white/5 font-display font-medium rounded-full 
-           hover:bg-white/10 transition-all duration-300;
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2);
+    font-family: var(--font-sans); font-weight: var(--fw-semibold); font-size: var(--t-14);
+    padding: 10px 20px; border-radius: var(--r-1); border: 1px solid transparent;
+    cursor: pointer; white-space: nowrap; line-height: 1;
+    transition: background var(--dur-1) var(--ease-out), color var(--dur-1) var(--ease-out),
+      border-color var(--dur-1) var(--ease-out), transform var(--dur-0) var(--ease-out);
   }
+  .btn:active { transform: translateY(0.5px); filter: brightness(0.97); }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-sm { padding: 6px 12px; font-size: var(--t-12); }
 
-  .terminal-text {
-    @apply font-mono text-xs leading-relaxed;
+  .btn-primary { background: var(--accent); color: var(--fg-on-accent); }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-secondary { background: var(--bg-1); color: var(--fg-0); border-color: var(--line-strong); }
+  .btn-secondary:hover { background: var(--bg-2); }
+  .btn-ghost { background: transparent; color: var(--fg-1); }
+  .btn-ghost:hover { color: var(--fg-0); background: var(--accent-faint); }
+
+  /* Chip */
+  .chip {
+    display: inline-flex; align-items: center; gap: var(--s-2);
+    font-family: var(--font-mono); font-size: var(--t-12); line-height: 1;
+    padding: 5px 10px; border-radius: var(--r-1);
+    background: var(--bg-1); border: 1px solid var(--line); color: var(--fg-1);
+  }
+  .chip-accent { background: var(--accent-dim); border-color: var(--accent); color: var(--accent-pale); }
+  .chip-ok { background: var(--ok-dim); border-color: var(--ok); color: var(--ok); }
+
+  /* Status badge — pulsing availability */
+  .status-badge {
+    display: inline-flex; align-items: center; gap: var(--s-2);
+    font-family: var(--font-mono); font-size: var(--t-12); font-weight: var(--fw-medium);
+    letter-spacing: var(--ls-wide); text-transform: uppercase;
+    padding: 5px 12px; border-radius: var(--r-pill);
+    background: var(--bg-1); border: 1px solid var(--line); color: var(--fg-1);
+  }
+  .status-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--ok); flex: none;
+    animation: status-heartbeat 1.6s var(--ease-out) infinite;
+  }
+  .status-busy .status-dot { background: var(--warn); }
+  .status-off .status-dot { background: var(--fg-3); animation: none; }
+
+  /* Blueprint grid background helper */
+  .blueprint-grid {
+    background-image:
+      linear-gradient(var(--grid-color) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+    background-size: var(--grid-size) var(--grid-size);
   }
 }
 
+/* ============================================================
+   UTILITIES (bidi + RTL chat bubbles — preserved)
+   ============================================================ */
 @layer utilities {
-  .bidi-ltr {
-    direction: ltr;
-    unicode-bidi: isolate;
-  }
+  .bidi-ltr { direction: ltr; unicode-bidi: isolate; }
+  .bidi-plaintext { unicode-bidi: plaintext; }
 
-  .bidi-plaintext {
-    unicode-bidi: plaintext;
-  }
-
-  .chat-bubble-user {
-    border-top-right-radius: 0.25rem;
-  }
-
-  .chat-bubble-agent {
-    border-top-left-radius: 0.25rem;
-  }
-
-  :dir(rtl) .chat-bubble-user {
-    border-top-left-radius: 0.25rem;
-    border-top-right-radius: 1rem;
-  }
-
-  :dir(rtl) .chat-bubble-agent {
-    border-top-left-radius: 1rem;
-    border-top-right-radius: 0.25rem;
-  }
+  .chat-bubble-user { border-top-right-radius: 0.25rem; }
+  .chat-bubble-agent { border-top-left-radius: 0.25rem; }
+  :dir(rtl) .chat-bubble-user { border-top-left-radius: 0.25rem; border-top-right-radius: 1rem; }
+  :dir(rtl) .chat-bubble-agent { border-top-left-radius: 1rem; border-top-right-radius: 0.25rem; }
 }
 
-/* Scroll-reveal: CSS-driven, no JS animation library dependency.
-   Native IntersectionObserver adds .in-view; CSS handles the transition.
-   Content is visible by default (progressive enhancement) — the .reveal
-   class hides it only after JS confirms IntersectionObserver works. */
+/* ── Links ── */
+a { color: var(--color-link); text-decoration: none; text-underline-offset: 4px; transition: color var(--dur-1) var(--ease-out); }
+a:hover { text-decoration: underline; text-decoration-thickness: 1px; }
+hr { border: 0; border-top: 1px solid var(--line); margin: var(--s-7) 0; }
+
+/* ============================================================
+   Scroll-reveal (CSS-driven, no JS animation library).
+   ============================================================ */
 .reveal {
-  opacity: 0;
-  transform: translateY(30px);
-  filter: blur(8px);
+  opacity: 0; transform: translateY(30px); filter: blur(8px);
   transition:
-    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
-    filter 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity var(--dur-4) var(--ease-out),
+    transform var(--dur-4) var(--ease-out),
+    filter var(--dur-4) var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.in-view { opacity: 1; transform: translateY(0); filter: blur(0px); }
+@keyframes reveal-fallback { to { opacity: 1; transform: translateY(0); filter: blur(0px); } }
+.reveal:not(.in-view) { animation: reveal-fallback 0s 4s forwards; }
+
+/* ============================================================
+   Signature motion (kept, retinted electric-blue / ice)
+   ============================================================ */
+/* Status dot heartbeat */
+@keyframes status-heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.18); }
 }
 
-.reveal.in-view {
-  opacity: 1;
-  transform: translateY(0);
-  filter: blur(0px);
+/* Node pulse — active project node breathes an electric-blue ring */
+@keyframes node-pulse {
+  0%, 100% { box-shadow: 0 0 0 1px var(--accent), 0 0 18px -6px var(--accent); }
+  50% { box-shadow: 0 0 0 1px var(--accent-pale), 0 0 28px -4px var(--accent); }
 }
 
-/* Stagger children: apply --reveal-delay via style attr */
-.reveal { transition-delay: var(--reveal-delay, 0ms); }
-
-/* Safety: if JS hasn't added .in-view after 4s, show content anyway */
-@keyframes reveal-fallback {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0px);
-  }
+/* Cursor blink */
+@keyframes cursor-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.cursor-blink {
+  display: inline-block; width: 0.5em; height: 1em; vertical-align: text-bottom;
+  background: var(--accent); margin-inline-start: 2px;
+  animation: cursor-blink 1.06s step-end infinite;
 }
 
-.reveal:not(.in-view) {
-  animation: reveal-fallback 0s 4s forwards;
-}
-
-/* ── Neon ignition for logo "ai" ── */
+/* ── Neon ignition for logo "ai" (retinted to electric blue) ── */
 @keyframes neon-ignition {
-  /* Dark / off */
-  0%    { color: #3f3f46; text-shadow: none; opacity: 0.4; filter: brightness(0.3); }
-  /* 1st flash ON */
-  4%    { color: #e4e4e7; text-shadow: 0 0 6px rgba(255,255,255,0.6); opacity: 1; filter: brightness(1.2); }
-  /* OFF */
-  7%    { color: #3f3f46; text-shadow: none; opacity: 0.15; filter: brightness(0.2); }
-  /* 2nd flash ON (shorter) */
-  9%    { color: #d4d4d8; text-shadow: 0 0 4px rgba(255,255,255,0.4); opacity: 0.9; filter: brightness(1); }
-  /* OFF again */
-  14%   { color: #3f3f46; text-shadow: none; opacity: 0.1; filter: brightness(0.15); }
-  /* Warm-up begins — dim warm glow */
-  25%   { color: #fef3c7; text-shadow: 0 0 6px rgba(253,230,138,0.3); opacity: 0.35; filter: brightness(0.5); }
-  /* Brightening — shifting warm → cyan */
-  45%   { color: #a5f3fc; text-shadow: 0 0 10px rgba(165,243,252,0.4); opacity: 0.65; filter: brightness(0.8); }
-  /* Nearly there */
-  70%   { color: #67e8f9; text-shadow: 0 0 14px rgba(34,211,238,0.6); opacity: 0.9; filter: brightness(1); }
-  /* Slight overshoot */
-  85%   { color: #22d3ee; text-shadow: 0 0 18px rgba(34,211,238,0.9); opacity: 1; filter: brightness(1.15); }
-  /* Settle to final */
-  100%  { color: #22d3ee; text-shadow: 0 0 12px rgba(34,211,238,0.8); opacity: 1; filter: brightness(1); }
+  0%    { color: #3B4566; text-shadow: none; opacity: 0.4; filter: brightness(0.3); }
+  4%    { color: #EEF2FB; text-shadow: 0 0 6px rgba(238,242,251,0.6); opacity: 1; filter: brightness(1.2); }
+  7%    { color: #3B4566; text-shadow: none; opacity: 0.15; filter: brightness(0.2); }
+  9%    { color: #D1D8F2; text-shadow: 0 0 4px rgba(209,216,242,0.4); opacity: 0.9; filter: brightness(1); }
+  14%   { color: #3B4566; text-shadow: none; opacity: 0.1; filter: brightness(0.15); }
+  25%   { color: #1E3A8A; text-shadow: 0 0 6px rgba(37,99,235,0.3); opacity: 0.35; filter: brightness(0.5); }
+  45%   { color: #60A5FA; text-shadow: 0 0 10px rgba(96,165,250,0.4); opacity: 0.65; filter: brightness(0.8); }
+  70%   { color: #3B82F6; text-shadow: 0 0 14px rgba(59,130,246,0.6); opacity: 0.9; filter: brightness(1); }
+  85%   { color: #2563EB; text-shadow: 0 0 18px rgba(37,99,235,0.9); opacity: 1; filter: brightness(1.15); }
+  100%  { color: #3B82F6; text-shadow: 0 0 12px rgba(37,99,235,0.8); opacity: 1; filter: brightness(1); }
 }
-
 @keyframes neon-buzz {
-  0%, 100% { text-shadow: 0 0 12px rgba(34,211,238,0.8); filter: brightness(1); }
-  50%      { text-shadow: 0 0 8px rgba(34,211,238,0.55); filter: brightness(0.97); }
+  0%, 100% { text-shadow: 0 0 12px rgba(37,99,235,0.8); filter: brightness(1); }
+  50%      { text-shadow: 0 0 8px rgba(37,99,235,0.55); filter: brightness(0.97); }
 }
-
 .logo-ai-neon {
-  color: #3f3f46;
-  text-shadow: none;
-  opacity: 0.4;
-  filter: brightness(0.3);
+  color: #3B4566; text-shadow: none; opacity: 0.4; filter: brightness(0.3);
   animation:
-    neon-ignition 2s cubic-bezier(0.22, 1, 0.36, 1) 1.5s forwards,
+    neon-ignition 2s var(--ease-out) 1.5s forwards,
     neon-buzz 3s ease-in-out 3.5s infinite;
 }
 
-/* ── Flashlight ignition for logo dot ── */
+/* ── Flashlight ignition for logo dot (retinted) ── */
 @keyframes flashlight-on {
-  /* Hidden */
-  0%   { opacity: 0; scale: 0; background: white; box-shadow: none; filter: brightness(1); }
-  /* Pop in — bright white flash */
-  8%   { opacity: 1; scale: 1.8; background: white; box-shadow: 0 0 20px 8px rgba(255,255,255,0.95), 0 0 40px 16px rgba(255,255,255,0.4); filter: brightness(2); }
-  /* Peak flash — lens flare intensity */
-  15%  { opacity: 1; scale: 1.4; background: white; box-shadow: 0 0 24px 10px rgba(255,255,255,0.9), 0 0 50px 20px rgba(200,240,255,0.35); filter: brightness(1.8); }
-  /* Transition to cyan */
-  35%  { opacity: 1; scale: 1.1; background: #a5f3fc; box-shadow: 0 0 14px 4px rgba(34,211,238,0.7), 0 0 30px 10px rgba(34,211,238,0.25); filter: brightness(1.2); }
-  /* Settle to steady cyan glow */
-  60%  { opacity: 1; scale: 1; background: #22d3ee; box-shadow: 0 0 10px 3px rgba(34,211,238,0.8), 0 0 22px 8px rgba(34,211,238,0.3); filter: brightness(1.05); }
-  /* Final stable state */
-  100% { opacity: 1; scale: 1; background: #22d3ee; box-shadow: 0 0 8px 2px rgba(34,211,238,0.8), 0 0 18px 6px rgba(34,211,238,0.25); filter: brightness(1); }
+  0%   { opacity: 0; scale: 0; background: #fff; box-shadow: none; filter: brightness(1); }
+  8%   { opacity: 1; scale: 1.8; background: #fff; box-shadow: 0 0 20px 8px rgba(255,255,255,0.95), 0 0 40px 16px rgba(186,239,254,0.4); filter: brightness(2); }
+  15%  { opacity: 1; scale: 1.4; background: #fff; box-shadow: 0 0 24px 10px rgba(255,255,255,0.9), 0 0 50px 20px rgba(186,239,254,0.35); filter: brightness(1.8); }
+  35%  { opacity: 1; scale: 1.1; background: #BAEFFE; box-shadow: 0 0 14px 4px rgba(96,165,250,0.7), 0 0 30px 10px rgba(37,99,235,0.25); filter: brightness(1.2); }
+  60%  { opacity: 1; scale: 1; background: #3B82F6; box-shadow: 0 0 10px 3px rgba(37,99,235,0.8), 0 0 22px 8px rgba(37,99,235,0.3); filter: brightness(1.05); }
+  100% { opacity: 1; scale: 1; background: #2563EB; box-shadow: 0 0 8px 2px rgba(37,99,235,0.8), 0 0 18px 6px rgba(37,99,235,0.25); filter: brightness(1); }
 }
-
 @keyframes dot-pulse {
-  0%, 100% { box-shadow: 0 0 8px 2px rgba(34,211,238,0.8), 0 0 18px 6px rgba(34,211,238,0.25); }
-  50%      { box-shadow: 0 0 6px 2px rgba(34,211,238,0.6), 0 0 14px 4px rgba(34,211,238,0.15); }
+  0%, 100% { box-shadow: 0 0 8px 2px rgba(37,99,235,0.8), 0 0 18px 6px rgba(37,99,235,0.25); }
+  50%      { box-shadow: 0 0 6px 2px rgba(37,99,235,0.6), 0 0 14px 4px rgba(37,99,235,0.15); }
 }
-
 #logo-dot.flashlight-active {
-  background: #22d3ee !important;
+  background: #2563EB !important;
   animation:
-    flashlight-on 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+    flashlight-on 0.6s var(--ease-out) forwards,
     dot-pulse 3s ease-in-out 0.6s infinite;
 }
 
 /* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-0); }
+::-webkit-scrollbar-thumb { background: var(--line-strong); border-radius: var(--r-pill); }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-dim); }
 
-::-webkit-scrollbar-track {
-  @apply bg-obsidian;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-white/10 rounded-full hover:bg-white/20 transition-colors;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -67,7 +67,7 @@ const ScrambleText = ({ words, isRtl }: { words: string[]; isRtl: boolean }) => 
       <span className="invisible">{targetWord}</span>
       {/* Absolutely positioned scrambling text doesn't affect document flow */}
       <span
-        className="absolute top-0 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500"
+        className="absolute top-0 text-transparent bg-clip-text bg-gradient-to-r from-[var(--accent-pale)] to-[var(--accent-ice)]"
         style={{ insetInlineStart: 0, textAlign: isRtl ? 'right' : 'left' }}
       >
         {text}
@@ -301,8 +301,8 @@ const RecessedSymbol = React.memo(({ el, brightness, isMobile }: {
       `drop-shadow(0px 2px 2px rgba(255,255,255,${(0.03 + eff * 0.04).toFixed(3)}))`,
       // Phosphorescent glow from within
       ...(eff > 0.03 ? [
-        `drop-shadow(0 0 ${(eff * 3).toFixed(1)}px rgba(34,211,238,${(eff * 0.3).toFixed(3)}))`,
-        `drop-shadow(0 0 ${(eff * 8).toFixed(1)}px rgba(34,211,238,${(eff * 0.1).toFixed(3)}))`,
+        `drop-shadow(0 0 ${(eff * 3).toFixed(1)}px rgba(37,99,235,${(eff * 0.3).toFixed(3)}))`,
+        `drop-shadow(0 0 ${(eff * 8).toFixed(1)}px rgba(37,99,235,${(eff * 0.1).toFixed(3)}))`,
       ] : []),
     ].join(' ');
 
@@ -351,9 +351,9 @@ const RecessedSymbol = React.memo(({ el, brightness, isMobile }: {
     // Because text-shadow is BEHIND the dark text body,
     // the glow peeks out at the edges = light inside the carved channel
     ...(eff > 0.03 ? [
-      `0 0 ${(eff * 2).toFixed(1)}px rgba(34,211,238,${(eff * 0.35).toFixed(3)})`,
-      `0 0 ${(eff * 6).toFixed(1)}px rgba(34,211,238,${(eff * 0.15).toFixed(3)})`,
-      `0 0 ${(eff * 14).toFixed(1)}px rgba(34,211,238,${(eff * 0.05).toFixed(3)})`,
+      `0 0 ${(eff * 2).toFixed(1)}px rgba(37,99,235,${(eff * 0.35).toFixed(3)})`,
+      `0 0 ${(eff * 6).toFixed(1)}px rgba(37,99,235,${(eff * 0.15).toFixed(3)})`,
+      `0 0 ${(eff * 14).toFixed(1)}px rgba(37,99,235,${(eff * 0.05).toFixed(3)})`,
     ] : []),
   ].join(', ');
 
@@ -417,6 +417,9 @@ const IlluminationBackground = () => {
       STAGE_ELEMENTS.filter(e => e.depth < 0.9).map(e => e.id)
     ).slice(0, VISIBLE_COUNT - must.length);
     const ids = new Set([...must.map(e => e.id), ...rest]);
+    // Client-only randomization, guarded to run once — keeps SSR markup stable
+    // and avoids a hydration mismatch from Math.random differing server/client.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setVisibleElements(STAGE_ELEMENTS.filter(e => ids.has(e.id)));
   }, []);
 
@@ -524,7 +527,7 @@ const IlluminationBackground = () => {
             height: '150vh',
             x: '-50%',
             transformOrigin: 'top center',
-            background: 'linear-gradient(180deg, rgba(34,211,238,0.25) 0%, rgba(34,211,238,0.12) 15%, rgba(34,211,238,0.04) 40%, rgba(34,211,238,0.01) 60%, transparent 100%)',
+            background: 'linear-gradient(180deg, rgba(37,99,235,0.25) 0%, rgba(37,99,235,0.12) 15%, rgba(37,99,235,0.04) 40%, rgba(37,99,235,0.01) 60%, transparent 100%)',
             filter: 'blur(8px)',
           }}
           initial={{ opacity: 0, clipPath: 'polygon(50% 0%, 50% 0%, 50% 0%, 50% 0%)', rotate: 0 }}
@@ -597,14 +600,14 @@ export const Hero = () => {
         className="flex flex-col items-start"
         style={{ textAlign: 'start' }}
       >
-        <motion.div variants={item} className="flex items-center gap-2 mb-6 bg-zinc-900/50 border border-zinc-800 px-3 py-1.5 rounded-full">
-          <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
-          <span className="text-cyan-400 text-[10px] font-mono font-bold tracking-[0.2em] uppercase">
+        <motion.div variants={item} className="status-badge mb-6">
+          <span className="status-dot" />
+          <span className="text-accent">
             <HeroStatusLabel labels={hero.statusLabels} />
           </span>
         </motion.div>
-        
-        <div className="text-5xl md:text-7xl font-bold text-zinc-100 mb-6 tracking-tight leading-tight">
+
+        <div className="display text-5xl md:text-7xl text-fg-0 mb-6 leading-tight">
           <motion.div variants={wordVariants} initial="hidden" animate="show" className="inline-block overflow-hidden pb-2">
             {hero.titlePrefix.split('').map((char, i) => (
               <motion.span key={i} variants={charVariants} className="inline-block">
@@ -618,7 +621,7 @@ export const Hero = () => {
           </motion.div>
         </div>
         
-        <motion.h2 variants={item} className="text-xl md:text-2xl text-zinc-400 mb-6 font-light leading-relaxed">
+        <motion.h2 variants={item} className="text-xl md:text-2xl text-fg-1 mb-6 font-normal leading-relaxed">
           {hero.subtitle}
         </motion.h2>
 
@@ -630,18 +633,18 @@ export const Hero = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             href="#showcase"
-            className="w-full sm:w-auto bg-cyan-500 text-zinc-950 px-8 py-3.5 rounded-xl font-semibold hover:bg-cyan-400 transition-colors shadow-[0_0_20px_rgba(6,182,212,0.3)] flex items-center justify-center gap-2"
+            className="btn btn-primary w-full sm:w-auto px-8 py-3.5"
           >
-            {hero.primaryCta} <CtaArrow className="w-4 h-4" />
+            {hero.primaryCta} <CtaArrow className="w-4 h-4" strokeWidth={1.5} />
           </motion.a>
           <motion.a
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             href={dossier.resumeFile}
             download={dossier.resumeDownloadName}
-            className="w-full sm:w-auto bg-zinc-900 border border-zinc-700 text-zinc-100 px-8 py-3.5 rounded-xl font-medium hover:bg-zinc-800 transition-colors flex items-center justify-center gap-2"
+            className="btn btn-secondary w-full sm:w-auto px-8 py-3.5"
           >
-            <FileText className="w-4 h-4" />
+            <FileText className="w-4 h-4" strokeWidth={1.5} />
             {hero.secondaryCta}
           </motion.a>
         </motion.div>
@@ -654,7 +657,7 @@ export const Hero = () => {
         transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
         className="relative hidden lg:block"
       >
-        <div className="absolute inset-0 bg-cyan-500/20 blur-[100px] rounded-full pointer-events-none" />
+        <div className="absolute inset-0 bg-accent/20 blur-[100px] rounded-full pointer-events-none" />
         <InteractiveAgent />
       </motion.div>
     </section>

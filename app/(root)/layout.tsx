@@ -1,6 +1,7 @@
 import '../globals.css';
 import type { Metadata } from 'next';
 import { fontVariables } from '@/lib/fonts';
+import { ThemeScript } from '@/app/components/ThemeScript';
 import { siteDescription, siteOwnerName, siteTitle, siteUrl } from '@/lib/site-metadata';
 
 export const metadata: Metadata = {
@@ -29,6 +30,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" dir="ltr" className={fontVariables} suppressHydrationWarning>
+      <head>
+        <ThemeScript />
+      </head>
       <body className="antialiased" suppressHydrationWarning>{children}</body>
     </html>
   );

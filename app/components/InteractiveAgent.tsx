@@ -144,26 +144,26 @@ export const InteractiveAgent = ({ onClose }: { onClose?: () => void } = {}) => 
     <div className={`relative w-full max-w-lg mx-auto lg:mx-0 backdrop-blur-xl border rounded-2xl overflow-hidden shadow-2xl flex flex-col h-[500px] max-h-[80vh] transition-all duration-1000 ${
       matrixMode 
         ? 'bg-black/95 border-green-500/50 shadow-[0_0_30px_rgba(34,197,94,0.2)]' 
-        : 'bg-zinc-950/80 border-zinc-800'
+        : 'bg-page/80 border-line'
     }`} dir={direction}>
       {/* Header */}
       <div className={`flex items-center justify-between px-4 py-3 border-b transition-colors duration-1000 ${
-        matrixMode ? 'border-green-900/50 bg-black/80' : 'border-zinc-800 bg-zinc-900/50'
+        matrixMode ? 'border-green-900/50 bg-black/80' : 'border-line bg-surface/50'
       }`}>
         <div className="flex items-center gap-2">
-          <Cpu className={`w-4 h-4 transition-colors duration-1000 ${matrixMode ? 'text-green-500' : 'text-cyan-400'}`} />
-          <span className={`text-xs font-mono font-semibold tracking-wider transition-colors duration-1000 ${matrixMode ? 'text-green-500' : 'text-zinc-300'}`}>
+          <Cpu className={`w-4 h-4 transition-colors duration-1000 ${matrixMode ? 'text-green-500' : 'text-accent'}`} />
+          <span className={`text-xs font-mono font-semibold tracking-wider transition-colors duration-1000 ${matrixMode ? 'text-green-500' : 'text-fg-1'}`}>
             {matrixMode ? assistant.matrixTitle : assistant.title}
           </span>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex gap-1.5">
-            <div className={`w-2.5 h-2.5 rounded-full transition-colors duration-1000 ${matrixMode ? 'bg-green-900' : 'bg-zinc-700'}`} />
-            <div className={`w-2.5 h-2.5 rounded-full transition-colors duration-1000 ${matrixMode ? 'bg-green-900' : 'bg-zinc-700'}`} />
+            <div className={`w-2.5 h-2.5 rounded-full transition-colors duration-1000 ${matrixMode ? 'bg-green-900' : 'bg-line-strong'}`} />
+            <div className={`w-2.5 h-2.5 rounded-full transition-colors duration-1000 ${matrixMode ? 'bg-green-900' : 'bg-line-strong'}`} />
             <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />
           </div>
           {onClose && (
-            <button onClick={onClose} className={`transition-colors ${matrixMode ? 'text-green-700 hover:text-green-400' : 'text-zinc-400 hover:text-zinc-100'}`}>
+            <button onClick={onClose} className={`transition-colors ${matrixMode ? 'text-green-700 hover:text-green-400' : 'text-fg-1 hover:text-fg-0'}`}>
               <X className="w-4 h-4" />
             </button>
           )}
@@ -171,7 +171,7 @@ export const InteractiveAgent = ({ onClose }: { onClose?: () => void } = {}) => 
       </div>
 
       {/* Chat Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-transparent">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin scrollbar-thumb-[color:var(--line-strong)] scrollbar-track-transparent">
         <AnimatePresence initial={false}>
           {messages.map((msg) => (
             <motion.div
@@ -181,7 +181,7 @@ export const InteractiveAgent = ({ onClose }: { onClose?: () => void } = {}) => 
               className={`flex flex-col ${msg.type === 'user' ? 'items-end' : 'items-start'}`}
             >
               {msg.type === 'system' ? (
-                <div className={`text-[10px] font-mono my-1 flex items-center gap-1.5 transition-colors duration-1000 ${matrixMode ? 'text-green-600' : 'text-cyan-500/70'}`}>
+                <div className={`text-[10px] font-mono my-1 flex items-center gap-1.5 transition-colors duration-1000 ${matrixMode ? 'text-green-600' : 'text-accent/70'}`}>
                   <Terminal className="w-3 h-3" />
                   {msg.content}
                 </div>
@@ -190,13 +190,13 @@ export const InteractiveAgent = ({ onClose }: { onClose?: () => void } = {}) => 
                   msg.type === 'user' 
                     ? matrixMode 
                       ? 'bg-green-950/50 text-green-400 border border-green-500/30 chat-bubble-user font-mono'
-                      : 'bg-cyan-500 text-zinc-950 chat-bubble-user' 
+                      : 'bg-accent text-[var(--fg-on-accent)] chat-bubble-user' 
                     : matrixMode
                       ? 'bg-black text-green-500 border border-green-500/30 chat-bubble-agent font-mono shadow-[0_0_15px_rgba(34,197,94,0.1)]'
-                      : 'bg-zinc-800/50 border border-zinc-700/50 text-zinc-200 chat-bubble-agent'
+                      : 'bg-surface-raised/50 border border-line-strong/50 text-fg-0 chat-bubble-agent'
                 }`} style={{ textAlign: 'start' }}>
                   {msg.type === 'agent' && (
-                    <div className={`flex items-center gap-1.5 mb-1 text-[10px] font-mono uppercase tracking-wider transition-colors duration-1000 ${matrixMode ? 'text-green-600' : 'text-cyan-400'}`}>
+                    <div className={`flex items-center gap-1.5 mb-1 text-[10px] font-mono uppercase tracking-wider transition-colors duration-1000 ${matrixMode ? 'text-green-600' : 'text-accent'}`}>
                       <Bot className="w-3 h-3" />
                       {msg.agentName}
                     </div>
@@ -213,11 +213,11 @@ export const InteractiveAgent = ({ onClose }: { onClose?: () => void } = {}) => 
               className="flex items-start"
             >
               <div className={`border rounded-2xl chat-bubble-agent px-4 py-3 flex items-center gap-1.5 transition-colors duration-1000 ${
-                matrixMode ? 'bg-black border-green-500/30' : 'bg-zinc-800/50 border-zinc-700/50'
+                matrixMode ? 'bg-black border-green-500/30' : 'bg-surface-raised/50 border-line-strong/50'
               }`}>
-                <div className={`w-1.5 h-1.5 rounded-full animate-bounce transition-colors duration-1000 ${matrixMode ? 'bg-green-500' : 'bg-cyan-400'}`} style={{ animationDelay: '0ms' }} />
-                <div className={`w-1.5 h-1.5 rounded-full animate-bounce transition-colors duration-1000 ${matrixMode ? 'bg-green-500' : 'bg-cyan-400'}`} style={{ animationDelay: '150ms' }} />
-                <div className={`w-1.5 h-1.5 rounded-full animate-bounce transition-colors duration-1000 ${matrixMode ? 'bg-green-500' : 'bg-cyan-400'}`} style={{ animationDelay: '300ms' }} />
+                <div className={`w-1.5 h-1.5 rounded-full animate-bounce transition-colors duration-1000 ${matrixMode ? 'bg-green-500' : 'bg-accent'}`} style={{ animationDelay: '0ms' }} />
+                <div className={`w-1.5 h-1.5 rounded-full animate-bounce transition-colors duration-1000 ${matrixMode ? 'bg-green-500' : 'bg-accent'}`} style={{ animationDelay: '150ms' }} />
+                <div className={`w-1.5 h-1.5 rounded-full animate-bounce transition-colors duration-1000 ${matrixMode ? 'bg-green-500' : 'bg-accent'}`} style={{ animationDelay: '300ms' }} />
               </div>
             </motion.div>
           )}
@@ -235,7 +235,7 @@ export const InteractiveAgent = ({ onClose }: { onClose?: () => void } = {}) => 
             className={`whitespace-nowrap text-xs font-medium px-3 py-1.5 rounded-full border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
               matrixMode 
                 ? 'bg-black border-green-900 text-green-700 hover:text-green-400 hover:border-green-500/50 font-mono'
-                : 'bg-zinc-900 border-zinc-800 text-zinc-400 hover:text-cyan-400 hover:border-cyan-500/30'
+                : 'bg-surface border-line text-fg-1 hover:text-accent hover:border-accent/30'
             }`}
           >
             {prompt}
@@ -245,7 +245,7 @@ export const InteractiveAgent = ({ onClose }: { onClose?: () => void } = {}) => 
 
       {/* Input Area */}
       <div className={`p-4 pt-2 border-t transition-colors duration-1000 ${
-        matrixMode ? 'border-green-900/50 bg-black/80' : 'border-zinc-800/50 bg-zinc-900/30'
+        matrixMode ? 'border-green-900/50 bg-black/80' : 'border-line/50 bg-surface/30'
       }`}>
         <form 
           onSubmit={(e) => { e.preventDefault(); handleSend(inputValue); }}
@@ -261,7 +261,7 @@ export const InteractiveAgent = ({ onClose }: { onClose?: () => void } = {}) => 
             className={`w-full border rounded-xl py-3 text-sm focus:outline-none transition-colors disabled:opacity-50 ${
               matrixMode
                 ? 'bg-black border-green-900/50 text-green-500 placeholder:text-green-900 focus:border-green-500/50 font-mono'
-                : 'bg-zinc-950 border-zinc-800 text-zinc-100 placeholder:text-zinc-600 focus:border-cyan-500/50'
+                : 'bg-page border-line text-fg-0 placeholder:text-fg-2 focus:border-accent/50'
             }`}
             style={{ paddingInlineStart: '1rem', paddingInlineEnd: '3rem', textAlign: 'start' }}
           />
@@ -271,7 +271,7 @@ export const InteractiveAgent = ({ onClose }: { onClose?: () => void } = {}) => 
             className={`absolute p-1.5 rounded-lg transition-colors disabled:opacity-50 ${
               matrixMode
                 ? 'bg-green-900/30 text-green-500 hover:bg-green-900/60 border border-green-500/30 disabled:hover:bg-green-900/30'
-                : 'bg-cyan-500 text-zinc-950 hover:bg-cyan-400 disabled:hover:bg-cyan-500'
+                : 'bg-accent text-[var(--fg-on-accent)] hover:bg-accent disabled:hover:bg-accent'
             }`}
             style={{ insetInlineEnd: '0.5rem' }}
           >

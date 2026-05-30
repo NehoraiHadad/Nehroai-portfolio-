@@ -14,7 +14,7 @@ export default function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 font-sans selection:bg-cyan-500/30 relative">
+    <div className="min-h-screen bg-page text-fg-0 font-sans selection:bg-accent/30 relative">
       <BackgroundEffect />
       <TopNav mobileMenuOpen={mobileMenuOpen} setMobileMenuOpen={setMobileMenuOpen} />
       <main className="relative z-10">

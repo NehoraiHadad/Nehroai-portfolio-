@@ -1,11 +1,12 @@
+// Nehorai design-system palette (deep navy → electric blue → pale ice).
 const COLORS = {
-  obsidian: '#131313',
-  panel: '#1a1a1a',
-  slate: '#2A2A2A',
-  electric: '#00D1FF',
-  gold: '#FFD59C',
-  text: '#F5F5F5',
-  muted: '#A1A1AA',
+  obsidian: '#050E22', // --bg-0
+  panel: '#0A1735',    // --bg-1
+  slate: '#2A3D78',    // --line-strong
+  electric: '#2563EB', // --accent
+  ice: '#BAEFFE',      // --accent-ice (node glow)
+  text: '#EEF2FB',     // --fg-0
+  muted: '#9CA9C8',    // --fg-1
 };
 
 export function BrandMark() {
@@ -30,7 +31,7 @@ export function BrandMark() {
           borderRadius: 28,
           border: `2px solid ${COLORS.slate}`,
           background: COLORS.panel,
-          boxShadow: '0 0 0 2px rgba(0, 209, 255, 0.12) inset',
+          boxShadow: '0 0 0 2px rgba(37, 99, 235, 0.12) inset',
           position: 'relative',
         }}
       >
@@ -53,8 +54,8 @@ export function BrandMark() {
             width: 16,
             height: 16,
             borderRadius: 9999,
-            background: COLORS.gold,
-            boxShadow: `0 0 12px ${COLORS.gold}`,
+            background: COLORS.ice,
+            boxShadow: `0 0 12px ${COLORS.ice}`,
           }}
         />
       </div>
@@ -91,7 +92,7 @@ export function SocialShareCard() {
           left: 96,
           width: 300,
           height: '100%',
-          background: 'rgba(0, 209, 255, 0.08)',
+          background: 'rgba(37, 99, 235, 0.08)',
           transform: 'skewX(-18deg)',
         }}
       />
@@ -103,7 +104,7 @@ export function SocialShareCard() {
           width: 180,
           height: 180,
           borderRadius: 9999,
-          border: '1px solid rgba(255,213,156,0.28)',
+          border: '1px solid rgba(186,239,254,0.28)',
         }}
       />
       <div
@@ -113,7 +114,7 @@ export function SocialShareCard() {
           right: 128,
           width: 240,
           height: 2,
-          background: 'rgba(255,213,156,0.42)',
+          background: 'rgba(186,239,254,0.42)',
         }}
       />
       <div
@@ -153,7 +154,7 @@ export function SocialShareCard() {
               alignItems: 'center',
               padding: '10px 18px',
               borderRadius: 9999,
-              border: '1px solid rgba(0,209,255,0.28)',
+              border: '1px solid rgba(37,99,235,0.28)',
               color: COLORS.electric,
               fontSize: 22,
               letterSpacing: '0.18em',
@@ -179,7 +180,7 @@ export function SocialShareCard() {
               maxWidth: 620,
               fontSize: 34,
               lineHeight: 1.32,
-              color: '#D4D4D8',
+              color: '#9CA9C8',
             }}
           >
             AI engineer and full-stack builder shipping production-grade agents, automation, and modern web products.
@@ -189,7 +190,7 @@ export function SocialShareCard() {
               marginTop: 30,
               display: 'flex',
               alignItems: 'center',
-              color: COLORS.gold,
+              color: COLORS.ice,
               fontSize: 24,
               letterSpacing: '0.08em',
               textTransform: 'uppercase',

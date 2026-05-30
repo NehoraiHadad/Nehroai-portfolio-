@@ -5,6 +5,7 @@ import { getLocaleDirection, isLocale, locales } from '@/lib/i18n/config';
 import { getDictionary } from '@/lib/i18n/dictionaries';
 import { I18nProvider } from '@/lib/i18n/provider';
 import { fontVariables } from '@/lib/fonts';
+import { ThemeScript } from '@/app/components/ThemeScript';
 import { getAbsoluteUrl, siteOwnerName, siteUrl } from '@/lib/site-metadata';
 
 export async function generateStaticParams() {
@@ -66,6 +67,9 @@ export default async function RootLayout({
 
   return (
     <html lang={lang} dir={direction} className={fontVariables} suppressHydrationWarning>
+      <head>
+        <ThemeScript />
+      </head>
       <body className="antialiased" suppressHydrationWarning>
         <I18nProvider locale={lang} dictionary={dictionary}>
           {children}
